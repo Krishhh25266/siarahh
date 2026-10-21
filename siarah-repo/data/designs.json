@@ -1,0 +1,475 @@
+{
+  "_notes": "Placeholder data. price is null until set. fabric_set 'standard' = linen, Chanderi, organza, cotton satin. Satin and lace get their own design set later. Rows with needs_unique_name share a name with another design.",
+  "designs": [
+    {
+      "id": "01",
+      "name": "Lace Up Romance",
+      "tagline": "Feminine structure, effortless grace.",
+      "details": [
+        "Bust detail",
+        "Front lace up",
+        "Bow detail",
+        "Skirt flow"
+      ],
+      "images": {
+        "main": "assets/designs/01-main.jpg",
+        "details": "assets/designs/01-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": false
+    },
+    {
+      "id": "02",
+      "name": "Modern Heirloom",
+      "tagline": "Timeless lines, endless moments.",
+      "details": [
+        "Neckline detail",
+        "Back lace up",
+        "Waist shape",
+        "Skirt flow"
+      ],
+      "images": {
+        "main": "assets/designs/02-main.jpg",
+        "details": "assets/designs/02-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": false
+    },
+    {
+      "id": "03",
+      "name": "Bow Shoulder Romance",
+      "tagline": "Feminine structure, effortless grace.",
+      "details": [
+        "Bust detail",
+        "Shoulder bow",
+        "Back detail",
+        "Skirt flow"
+      ],
+      "images": {
+        "main": "assets/designs/03-main.jpg",
+        "details": "assets/designs/03-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": false
+    },
+    {
+      "id": "04",
+      "name": "Halter Ruffle Elegance",
+      "tagline": "Timeless lines, endless moments.",
+      "details": [
+        "Bust detail",
+        "Halter ruffle",
+        "Back detail",
+        "Skirt flow"
+      ],
+      "images": {
+        "main": "assets/designs/04-main.jpg",
+        "details": "assets/designs/04-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": false
+    },
+    {
+      "id": "05",
+      "name": "Romantic Puff Corset",
+      "tagline": "Feminine structure, effortless grace.",
+      "details": [
+        "Bust & tie",
+        "Puff sleeve",
+        "Lace-up back",
+        "Skirt flow"
+      ],
+      "images": {
+        "main": "assets/designs/05-main.jpg",
+        "details": "assets/designs/05-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": false
+    },
+    {
+      "id": "06",
+      "name": "Puff Sleeve Heirloom",
+      "tagline": "Timeless lines, endless moments.",
+      "details": [
+        "Neckline",
+        "Puff sleeve",
+        "Lace-up back",
+        "Skirt flow"
+      ],
+      "images": {
+        "main": "assets/designs/06-main.jpg",
+        "details": "assets/designs/06-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": false
+    },
+    {
+      "id": "07",
+      "name": "Ruffled Romance Corset",
+      "tagline": "Soft ruffles, stronger stories.",
+      "details": [
+        "Ruffle detail",
+        "Sleeve detail",
+        "Lace-up back",
+        "Skirt flow"
+      ],
+      "images": {
+        "main": "assets/designs/07-main.jpg",
+        "details": "assets/designs/07-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": false
+    },
+    {
+      "id": "08",
+      "name": "Modern Élan Corset",
+      "tagline": "Classic lines, contemporary grace.",
+      "details": [
+        "Neckline detail",
+        "Layered sleeve",
+        "Lace-up back",
+        "Skirt flow"
+      ],
+      "images": {
+        "main": "assets/designs/08-main.jpg",
+        "details": "assets/designs/08-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": false
+    },
+    {
+      "id": "09",
+      "name": "Garden Grace Corset",
+      "tagline": "Delicate sleeves, endless charm.",
+      "details": [
+        "Sleeve detail",
+        "Neckline detail",
+        "Lace-up back",
+        "Skirt flow"
+      ],
+      "images": {
+        "main": "assets/designs/09-main.jpg",
+        "details": "assets/designs/09-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": false
+    },
+    {
+      "id": "10",
+      "name": "Petal Whisper Corset",
+      "tagline": "Effortless lines, timeless beauty.",
+      "details": [
+        "Sleeve detail",
+        "Strap detail",
+        "Lace-up back",
+        "Skirt flow"
+      ],
+      "images": {
+        "main": "assets/designs/10-main.jpg",
+        "details": "assets/designs/10-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": false
+    },
+    {
+      "id": "11",
+      "name": "Bloom Drapé Corset No. 11",
+      "tagline": "Flowy drapes, a softer tomorrow.",
+      "details": [
+        "Shoulder drape",
+        "Bodice detail",
+        "Lace-up back",
+        "Skirt flow"
+      ],
+      "images": {
+        "main": "assets/designs/11-main.jpg",
+        "details": "assets/designs/11-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": true
+    },
+    {
+      "id": "12",
+      "name": "Sweetheart Bow Corset No. 12",
+      "tagline": "Classic charm, forever feminine.",
+      "details": [
+        "Bow strap detail",
+        "Sweetheart detail",
+        "Lace-up back",
+        "Skirt flow"
+      ],
+      "images": {
+        "main": "assets/designs/12-main.jpg",
+        "details": "assets/designs/12-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": true
+    },
+    {
+      "id": "13",
+      "name": "Bloom Drapé Corset No. 13",
+      "tagline": "Graceful draping, timeless allure.",
+      "details": [
+        "Shoulder drape",
+        "Bodice detail",
+        "Lace-up back",
+        "Skirt flow"
+      ],
+      "images": {
+        "main": "assets/designs/13-main.jpg",
+        "details": "assets/designs/13-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": true
+    },
+    {
+      "id": "14",
+      "name": "Sweetheart Bow Corset No. 14",
+      "tagline": "Classic charm, forever feminine.",
+      "details": [
+        "Strap detail",
+        "Bust detail",
+        "Lace-up back",
+        "Skirt ruffle"
+      ],
+      "images": {
+        "main": "assets/designs/14-main.jpg",
+        "details": "assets/designs/14-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": true
+    },
+    {
+      "id": "15",
+      "name": "Bloom Halter Corset Gown",
+      "tagline": "Soft structure, graceful draping.",
+      "details": [
+        "Halter neckline",
+        "Pleated bust",
+        "Lace-up back",
+        "Skirt flow"
+      ],
+      "images": {
+        "main": "assets/designs/15-main.jpg",
+        "details": "assets/designs/15-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": false
+    },
+    {
+      "id": "16",
+      "name": "Puff Sleeve Corset Gown",
+      "tagline": "Romantic volume, timeless corsetry.",
+      "details": [
+        "Puff sleeve",
+        "Buttoned bodice",
+        "Lace-up back",
+        "Full skirt"
+      ],
+      "images": {
+        "main": "assets/designs/16-main.jpg",
+        "details": "assets/designs/16-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": false
+    },
+    {
+      "id": "17",
+      "name": "Rosé Petal Corset",
+      "tagline": "Soft ruching, sweet details, forever classic.",
+      "details": [
+        "Ruched bodice",
+        "Strap detail",
+        "Lace-up back",
+        "Skirt flow"
+      ],
+      "images": {
+        "main": "assets/designs/17-main.jpg",
+        "details": "assets/designs/17-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": false
+    },
+    {
+      "id": "18",
+      "name": "Blush Button Corset",
+      "tagline": "Romantic lines, endless elegance.",
+      "details": [
+        "Button detail",
+        "Bodice pleats",
+        "Lace-up back",
+        "Skirt hem"
+      ],
+      "images": {
+        "main": "assets/designs/18-main.jpg",
+        "details": "assets/designs/18-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": false
+    },
+    {
+      "id": "19",
+      "name": "Véla Corset Dress",
+      "tagline": "Understated grace, endlessly elegant.",
+      "details": [
+        "Neckline detail",
+        "Strap detail",
+        "Lace-up back",
+        "Skirt flow"
+      ],
+      "images": {
+        "main": "assets/designs/19-main.jpg",
+        "details": "assets/designs/19-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": false
+    },
+    {
+      "id": "20",
+      "name": "Noir Square Corset",
+      "tagline": "Clean lines, timeless feminine charm.",
+      "details": [
+        "Square neck detail",
+        "Bodice panel",
+        "Lace-up back",
+        "Skirt pleats"
+      ],
+      "images": {
+        "main": "assets/designs/20-main.jpg",
+        "details": "assets/designs/20-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": false
+    },
+    {
+      "id": "21",
+      "name": "Bella Corset Dress",
+      "tagline": "Classic curves, forever enchanting.",
+      "details": [
+        "Bust detail",
+        "Strap detail",
+        "Lace-up back",
+        "Skirt flow"
+      ],
+      "images": {
+        "main": "assets/designs/21-main.jpg",
+        "details": "assets/designs/21-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": false
+    },
+    {
+      "id": "22",
+      "name": "Fleur Corset Dress",
+      "tagline": "Delicate bloom, timeless charm.",
+      "details": [
+        "Ruched bust",
+        "Shoulder detail",
+        "Lace-up back",
+        "Skirt pleats"
+      ],
+      "images": {
+        "main": "assets/designs/22-main.jpg",
+        "details": "assets/designs/22-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": false
+    },
+    {
+      "id": "23",
+      "name": "Meadow Corset Dress No. 23",
+      "tagline": "Delicate details, endless charm.",
+      "details": [
+        "Ruched bust",
+        "Strap detail",
+        "Lace-up back",
+        "Skirt flow"
+      ],
+      "images": {
+        "main": "assets/designs/23-main.jpg",
+        "details": "assets/designs/23-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": true
+    },
+    {
+      "id": "24",
+      "name": "Classic Corset Dress",
+      "tagline": "Simple lines, forever elegant.",
+      "details": [
+        "Shoulder detail",
+        "Strap detail",
+        "Lace-up back",
+        "Skirt texture"
+      ],
+      "images": {
+        "main": "assets/designs/24-main.jpg",
+        "details": "assets/designs/24-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": false
+    },
+    {
+      "id": "25",
+      "name": "Meadow Corset Dress No. 25",
+      "tagline": "Classic structure, effortless grace.",
+      "details": [
+        "Sweetheart bust",
+        "Strap detail",
+        "Corset detail",
+        "Lace-up back",
+        "Skirt flow"
+      ],
+      "images": {
+        "main": "assets/designs/25-main.jpg",
+        "details": "assets/designs/25-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": true
+    },
+    {
+      "id": "26",
+      "name": "Ribbon Corset Dress",
+      "tagline": "Understated charm, timeless appeal.",
+      "details": [
+        "V-neck bust",
+        "Corset detail",
+        "Lace-up back",
+        "Skirt flow",
+        "Fabric detail"
+      ],
+      "images": {
+        "main": "assets/designs/26-main.jpg",
+        "details": "assets/designs/26-details.jpg"
+      },
+      "price": null,
+      "fabric_set": "standard",
+      "needs_unique_name": false
+    }
+  ]
+}
