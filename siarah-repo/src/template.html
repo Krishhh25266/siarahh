@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="auto">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Siarah</title>
+  <meta name="theme-color" content="#190F1B">
+  <script>
+    (() => {
+      const root = document.documentElement;
+      const themeColor = document.querySelector('meta[name="theme-color"]');
+      const preference = window.matchMedia('(prefers-color-scheme: light)');
+      const requestedTheme = root.dataset.theme;
+      const applyTheme = () => {
+        const theme = requestedTheme === 'auto' ? (preference.matches ? 'light' : 'dark') : requestedTheme;
+        root.dataset.theme = theme;
+        if (themeColor) themeColor.content = theme === 'light' ? '#FAF7F2' : '#190F1B';
+      };
+      applyTheme();
+      if (requestedTheme === 'auto') preference.addEventListener('change', applyTheme);
+    })();
+  </script>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <style>
+/* ==========================================================================
+   SIARAH — BLUSH COUTURE · design system
+   Palette from the supplied reference (four core colours, unchanged):
+     DEEP PLUM    #190F1B  foundation: page, header, drawers, footer
+     ROSE PINK    #F9A1A9  signature accent: primary buttons, selected states, focus
+     SOFT BLUSH   #FEC9CE  warm light surface (heritage band), prices, delicate highlights
+     SMOKY GREY   #544E58  secondary surfaces, dividers, muted depth
+   Everything else is a tint/shade derived from those four (see tokens).
+   ========================================================================== */
+:root {
+  /* core */
+  --plum: #190F1B; --rose: #F9A1A9; --blush: #FEC9CE; --smoky: #544E58;
+  /* derived */
+  --plum-2: #211426;      /* drawers, menu */
+  --plum-3: #2B1C30;      /* raised */
+  --smoky-hi: #6B6470;    /* hover on smoky */
+  --rose-hi: #FBB8BE;     /* rose hover */
+  --pearl: #FBF3F4;       /* image mats: pale paper, a touch lighter than Blush */
+  --mist: #FBF1F2; --muted: #C4B5BF;   /* warm light text / secondary text */
+  --surf: rgba(84, 78, 88, .32);       /* Smoky Grey surface over Plum */
+  --line: rgba(254, 201, 206, .16); --line-strong: rgba(254, 201, 206, .38);
+  --irid: linear-gradient(120deg, #544E58, #F9A1A9 40%, #FEC9CE 60%, #F9A1A9 80%, #544E58);
+  --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --sans: "Jost", system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* motion system */
+  --ease: cubic-bezier(.16, 1, .3, 1); --ease-apple: cubic-bezier(.28, .11, .32, 1);
+  --t-fast: 200ms; --t-mid: 380ms; --t-slow: 800ms;
+  --r: 2px; --button-r: 8px; --header-h: 76px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 96px; background: var(--plum); }
+body {
+  margin: 0; color: var(--mist); background: var(--plum); position: relative;
+  font: 400 15.5px/1.7 var(--sans); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+/* atmospheric light: two soft pools, fixed, non-interactive */
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(60rem 38rem at 108% 112%, rgba(249, 161, 169, .16), transparent 64%),
+    radial-gradient(46rem 30rem at -10% 114%, rgba(84, 78, 88, .5), transparent 62%),
+    radial-gradient(40rem 26rem at 86% -12%, rgba(254, 201, 206, .06), transparent 60%),
+    var(--plum);
+}
+body.nav-open { overflow: hidden; }
+h1, h2, h3 { font-family: var(--serif); font-weight: 400; line-height: 1.08; margin: 0; color: var(--mist); font-variant-numeric: lining-nums; }
+h3 { font-weight: 500; }
+p { margin: 0; }
+a { color: inherit; text-decoration: none; transition: color var(--t-fast) var(--ease); }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+img { max-width: 100%; }
+::selection { background: var(--rose); color: var(--plum); }
+:focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; }
+.w { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- Header (the one glass surface) ---------- */
+header {
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(25, 15, 27, .7); backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%);
+  transition: background var(--t-mid) var(--ease);
+}
+header.scrolled { background: rgba(25, 15, 27, .92); }
+header::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(84, 78, 88, .9), rgba(249, 161, 169, .85), rgba(84, 78, 88, .9), transparent);
+}
+.hd { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; height: var(--header-h); }
+.hl, .hr { display: flex; align-items: center; gap: 26px; }
+.hr { justify-content: flex-end; gap: 8px; }
+.hm { width: 44px; height: 44px; margin-left: -10px; padding: 10px; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
+.hm span { display: block; height: 1px; background: var(--mist); transform-origin: center; transition: width var(--t-mid) var(--ease), background var(--t-fast), transform var(--t-mid) var(--ease), opacity var(--t-fast); width: 24px; }
+.hm span:nth-child(2) { width: 16px; }
+.hm:hover span { width: 24px; background: var(--rose); }
+.hm[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hm[aria-expanded="true"] span:nth-child(2) { opacity: 0; transform: scaleX(.35); }
+.hm[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.brand { display: flex; flex-direction: column; align-items: center; gap: 4px; line-height: 1; }
+.brand svg { width: 20px; height: 18px; stroke: var(--rose); }
+.brand span { font: 500 24px var(--serif); letter-spacing: .5em; padding-left: .5em; color: var(--mist); }
+.wishlist-header { position: relative; width: 46px; height: 46px; flex: 0 0 46px; display: grid; place-items: center; padding: 0; border: 1px solid var(--line-strong); border-radius: 50%; color: var(--mist); transition: border-color var(--t-fast), background var(--t-fast), color var(--t-fast), transform var(--t-fast); }
+.wishlist-header svg { width: 21px; height: 21px; display: block; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: fill var(--t-fast), transform var(--t-fast); }
+.wishlist-header:hover { border-color: var(--rose); color: var(--rose); background: rgba(249, 161, 169, .08); transform: translateY(-1px); }
+.wishlist-header:focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; }
+.wishlist-header[aria-pressed="true"] svg { fill: var(--rose); }
+.wishlist-badge { position: absolute; top: -4px; right: -4px; min-width: 19px; height: 19px; padding: 0 4px; display: grid; place-items: center; border: 1px solid var(--plum); border-radius: 999px; background: var(--rose); color: var(--plum); font-size: 10px; line-height: 1; font-weight: 500; font-variant-numeric: tabular-nums; }
+.wishlist-badge[hidden] { display: none; }
+.bagbtn { position: relative; width: 46px; height: 46px; flex: 0 0 46px; display: grid; place-items: center; padding: 0; border: 1px solid var(--line-strong); border-radius: 50%; transition: border-color var(--t-fast), background var(--t-fast), transform var(--t-fast); }
+.bagbtn:hover { border-color: var(--rose); background: rgba(249, 161, 169, .08); transform: translateY(-1px); }
+.bagbtn svg, .fab svg { width: 18px; height: 18px; stroke: currentColor; }
+.bag-count, #cnt { position: absolute; top: -4px; right: -4px; min-width: 19px; height: 19px; padding: 0 4px; display: grid; place-items: center; border: 1px solid var(--plum); border-radius: 999px; background: var(--rose); color: var(--plum); font-size: 10px; line-height: 1; font-weight: 500; font-variant-numeric: tabular-nums; }
+.bump { animation: bump 480ms var(--ease); }
+.fab { position: fixed; right: 20px; bottom: 20px; z-index: 30; width: 48px; height: 48px; display: none; align-items: center; justify-content: center; padding: 0; border-radius: 50%; color: var(--mist); background: var(--smoky); border: 1px solid var(--line-strong); box-shadow: 0 10px 26px -12px rgba(0, 0, 0, .56); transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast); }
+.fab:hover { border-color: var(--rose); transform: translateY(-1px); }
+.fab #cnt { background: var(--rose); color: var(--plum); }
+
+/* ---------- Menu ---------- */
+.menu { position: fixed; inset: 0; z-index: 40; visibility: hidden; }
+.menu.open, .menu.closing { visibility: visible; }
+.menu-back { position: absolute; inset: 0; background: rgba(12, 6, 13, .68); backdrop-filter: blur(6px); opacity: 0; transition: opacity var(--t-mid); }
+.menu.open .menu-back { opacity: 1; }
+.menu-panel { position: relative; width: min(380px, 88vw); height: 100%; padding: 28px 32px; background: var(--plum-2); border-right: 1px solid var(--line); transform: translateX(-100%); transition: transform 520ms var(--ease); }
+.menu.open .menu-panel { transform: none; }
+.menu-x { font-size: 13px; letter-spacing: .09em;  color: var(--muted); margin-bottom: 40px; }
+.menu-x:hover { color: var(--mist); }
+.kicker { font-size: 12.5px; letter-spacing: .1em;  color: var(--rose); margin-bottom: 14px; }
+.menu-panel nav a { display: block; padding: 12px 0; font: 400 2rem var(--serif); border-bottom: 1px solid var(--line); }
+.menu-panel nav a:hover { color: var(--blush); padding-left: 8px; transition: padding var(--t-mid) var(--ease), color var(--t-fast); }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 48px; padding: 10px 28px; line-height: 1.25; white-space: nowrap;
+  color: var(--plum); border: 1px solid var(--rose); border-radius: 16px;
+  background: linear-gradient(var(--blush), var(--blush)) no-repeat left center / 0% 100%, var(--rose);
+  font-size: 12.5px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; text-align: center;
+  transition: background-size 220ms var(--ease), color 220ms var(--ease), border-color 220ms var(--ease), transform 220ms var(--ease), box-shadow 220ms var(--ease);
+}
+.btn .arr { display: inline-block; transition: transform 220ms var(--ease); }
+.btn:hover:not(:disabled) { background-size: 100% 100%; border-color: var(--blush); transform: translateY(-1px); box-shadow: 0 8px 18px -12px rgba(249, 161, 169, .34); }
+.btn:hover .arr { transform: translateX(4px); }
+.btn:active:not(:disabled) { transform: scale(.99); box-shadow: none; transition-duration: 200ms; }
+.btn:disabled { background: transparent; color: var(--muted); border-color: var(--line); cursor: not-allowed; }
+.btn.ghost { background: linear-gradient(var(--rose), var(--rose)) no-repeat left center / 0% 100%, transparent; color: var(--mist); border-color: var(--line-strong); }
+.btn.ghost:hover:not(:disabled) { border-color: var(--rose); color: var(--plum); box-shadow: none; }
+.btn-sm { min-height: 44px; padding: 9px 20px; font-size: 11.5px; }
+.lnk { display: inline-block; margin-top: 14px; font-size: 13px; color: var(--rose); border-bottom: 1px solid rgba(249, 161, 169, .45); padding-bottom: 1px; }
+.lnk:hover { color: var(--blush); border-color: var(--blush); }
+
+/* ---------- Image mats: illustrations are shown on their own paper ---------- */
+.ph { position: relative; background: var(--pearl); border-radius: var(--r); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.ph img { width: 100%; height: 100%; object-fit: contain; display: block; transition: opacity var(--t-mid) var(--ease), transform var(--t-slow) var(--ease); }
+.ph img.is-changing { opacity: 0; }
+.ph img[hidden], .pr img[hidden] { display: none; }
+.ph.no-img::after { content: attr(data-label); font: 300 clamp(2rem, 6vw, 4rem) var(--serif); color: rgba(25, 15, 27, .28); letter-spacing: .04em; }
+
+/* ---------- Home: hero ---------- */
+.hero { padding-top: 40px; }
+.hero .himg {
+  position: relative; aspect-ratio: 16 / 9; margin: 0 20px; display: flex; align-items: center; justify-content: center;
+  overflow: hidden; background: linear-gradient(180deg, var(--plum-2), var(--plum-3));
+}
+.hero .himg img { width: auto; height: 100%; max-width: 100%; object-fit: contain; }
+.hero .himg::before { display: none; }
+.himg::before { /* the iridescent hairline frame */
+  content: ""; position: absolute; inset: 0; z-index: 2; padding: 1px; border-radius: inherit; pointer-events: none;
+  background: var(--irid); background-size: 200% 200%;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: .85;
+}
+.hero-copy {
+  max-width: 1200px; margin: 0 auto; padding: 36px 24px 40px;
+  display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 40px; align-items: end;
+}
+.hero-copy h1 { min-width: 0; font-weight: 300; font-size: clamp(2.5rem, 5vw, 4.2rem); line-height: 1; letter-spacing: -.012em; }
+.hero-copy h1 em { font-style: italic; font-weight: 400; color: var(--rose); }
+.hero-description { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
+.lede { color: var(--muted); font-size: 18px; max-width: 44ch; margin-bottom: 22px; }
+.hero-copy .btn { align-self: flex-start; }
+.home-media-grid {
+  display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, .9fr); gap: clamp(16px, 3vw, 32px); padding-top: 52px;
+}
+.home-media-panel { min-width: 0; }
+.home-media-frame {
+  position: relative; aspect-ratio: 16 / 10; overflow: hidden; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(180deg, var(--plum-2), var(--plum-3)); border: 1px solid var(--line);
+}
+.home-media-photo, .home-media-video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.home-media-reference { display: block; width: auto; height: 100%; max-width: 100%; object-fit: contain; }
+.home-media-action { padding-top: 20px; }
+
+/* ---------- Home: lookbook rail ---------- */
+.rail-sec { padding: 72px 24px 24px; }
+.rail-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; margin-bottom: 28px; }
+.rail-head h2, .blk h2 { font-size: clamp(2rem, 3.6vw, 3rem); font-weight: 300; }
+.rail-head p, .subh { color: var(--muted); margin-top: 8px; }
+.rail-nav { display: flex; gap: 10px; }
+.rail { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 6px; }
+.rail::-webkit-scrollbar { display: none; }
+.rcard { position: relative; flex: 0 0 clamp(210px, 23%, 280px); scroll-snap-align: start; }
+.rcard-link { display: block; color: inherit; }
+.rcard .ph { aspect-ratio: 3 / 3.5; border: 1px solid transparent; transition: border-color var(--t-mid), box-shadow var(--t-mid) var(--ease); }
+.rcard h3 { font-size: 1.15rem; margin-top: 12px; color: var(--muted); letter-spacing: .06em; }
+.rcard:hover .ph { box-shadow: 0 28px 44px -28px rgba(25, 15, 27, .7); }
+.rcard:hover h3 { color: var(--mist); }
+.dots { display: flex; justify-content: center; gap: 8px; margin-top: 22px; }
+.dots button { width: 6px; height: 6px; padding: 0; border-radius: 99px; background: var(--line-strong); transition: width var(--t-mid) var(--ease), background var(--t-mid); }
+.dots button[aria-current="true"] { width: 28px; background: var(--rose); }
+.rail-foot { display: flex; justify-content: center; margin-top: 28px; }
+
+/* ---------- Catalogue grid & cards ---------- */
+.blk { padding: 72px 24px 24px; }
+.collection-count { font-size: 12px; letter-spacing: .07em;  color: var(--rose); margin: 10px 0 26px; }
+.grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px 24px; margin-top: 28px; }
+.card { position: relative; display: flex; flex-direction: column; min-width: 0; }
+.card-link { display: flex; flex: 1; flex-direction: column; min-width: 0; color: inherit; }
+.card .ph { aspect-ratio: 3 / 3.5; border: 1px solid transparent; transition: transform var(--t-mid) var(--ease), box-shadow var(--t-mid) var(--ease); }
+.card-info { padding-top: 16px; }
+.card-id { display: block; font-size: 12.5px; letter-spacing: .07em;  color: var(--muted); margin-bottom: 6px; }
+.card h3 { font-size: 1.45rem; margin-bottom: 6px; transition: color var(--t-fast); }
+.card p { color: var(--muted); font-size: 14px; line-height: 1.5; }
+.card .card-price { color: var(--rose); font-weight: 500; margin-top: 10px; font-size: 14px; letter-spacing: .04em; }
+.card:hover h3 { color: var(--blush); }
+.heri { text-align: center; padding: 110px 24px; margin-top: 70px; background: linear-gradient(165deg, var(--blush) 0%, var(--blush) 55%, var(--rose) 135%); color: var(--plum); }
+.heri h2 { font-size: clamp(2rem, 4.4vw, 3.6rem); font-weight: 300; max-width: 18ch; margin: 0 auto 16px;  color: var(--plum); }
+.heri p { color: var(--smoky); margin-bottom: 30px; }
+.heri .btn { color: var(--blush); border-color: var(--plum); background: linear-gradient(var(--plum-3), var(--plum-3)) no-repeat left center / 0% 100%, var(--plum); }
+.heri .btn:hover:not(:disabled) { border-color: var(--plum-3); box-shadow: 0 8px 18px -12px rgba(25, 15, 27, .38); }
+.empty { text-align: center; padding: 100px 24px; }
+.empty h2 { margin-bottom: 12px; } .empty p { color: var(--muted); margin-bottom: 24px; }
+
+/* ---------- Info pages ---------- */
+.crumb { padding: 28px 0 8px; font-size: 13px; color: var(--muted); }
+.crumb a:hover { color: var(--mist); }
+.info-page { padding-bottom: 60px; }
+.info-eyebrow, .step-kicker { font-size: 13px; letter-spacing: .1em;  color: var(--rose); margin: 30px 0 14px; }
+.info-page h1 { font-weight: 300; font-size: clamp(2.4rem, 5.4vw, 4.4rem); max-width: 18ch; margin-bottom: 20px; }
+.info-intro { color: var(--muted); max-width: 54ch; font-size: 16.5px; }
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 56px; margin-top: 56px; }
+.info-section { padding: 28px 0 36px; border-top: 1px solid var(--line); }
+.info-section h2 { font-size: 1.6rem; margin-bottom: 10px; color: var(--mist); }
+.info-section p { color: var(--muted); }
+.notice { margin-top: 32px; padding: 18px 22px; border: 1px solid var(--line); border-left: 2px solid var(--blush); border-radius: var(--r); background: var(--surf); color: var(--muted); max-width: 70ch; }
+.notice strong { color: var(--mist); font-weight: 500; }
+.info-actions { margin-top: 32px; }
+
+/* ---------- Customise ---------- */
+.pdp { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: start; margin-top: 12px; padding-bottom: 40px; }
+.pdp-media { position: sticky; top: 100px; display: grid; gap: 14px; }
+.pdp-media .ph { aspect-ratio: 4 / 5; }
+.pdp-media .det { aspect-ratio: 3 / 1.1; }
+.pdp h1 { font-weight: 300; font-size: clamp(2.4rem, 4.4vw, 3.8rem); }
+.tagline { color: var(--muted); margin-top: 8px; }
+#price { font: 500 1.5rem var(--serif); color: var(--blush); margin-top: 10px; font-variant-numeric: lining-nums; }
+.cfg-summary { margin: 24px 0; padding: 20px 22px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surf); }
+.cfg-summary h2 { font-size: 1.3rem; margin-bottom: 10px; }
+dl { margin: 0; }
+.cfg-summary dl { display: grid; grid-template-columns: 90px 1fr; gap: 6px 14px; font-size: 14px; }
+.cfg-summary dt { color: var(--muted); } .cfg-summary dd { margin: 0; color: var(--mist); }
+.cfg-summary .pending { color: var(--muted); font-style: italic; }
+.cfg-alert { min-height: 1.6em; font-size: 14px; margin-bottom: 10px; }
+.cfg-alert.error { color: var(--blush); } .cfg-alert.success { color: var(--blush); }
+.cfg-alert:not(:empty) { animation: rise 420ms var(--ease) both; }
+.steps { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 8px; overflow-x: auto; scrollbar-width: none; }
+.steps button { position: relative; flex: 0 0 auto; padding: 14px 16px; font-size: 12px; letter-spacing: .07em;  color: var(--muted); transition: color var(--t-fast); }
+.steps button:hover { color: var(--mist); }
+.steps button::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: -1px; height: 2px; background: var(--irid); transform: scaleX(0); transform-origin: left; transition: transform 520ms var(--ease); }
+.steps button.on { color: var(--mist); } .steps button.on::after { transform: scaleX(1); }
+.steps button.done:not(.on)::before { content: "✓ "; color: var(--rose); }
+.panel { display: none; padding-top: 8px; }
+.panel.on { display: block; animation: rise var(--t-mid) var(--ease) both; }
+.panel-title { font-size: 2rem; font-weight: 300; margin-bottom: 8px; }
+.panel-copy, .cfg-note { color: var(--muted); margin-bottom: 18px; font-size: 14.5px; }
+.lbl { color: var(--muted); margin-bottom: 14px; font-size: 14px; } .lbl b { color: var(--mist); font-weight: 500; }
+.ch { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px; }
+.chip { display: inline-flex; background: transparent; align-items: center; gap: 9px; padding: 10px 18px; font-size: 14px; border: 1px solid var(--line-strong); border-radius: var(--button-r); transition: border-color var(--t-fast), background var(--t-fast), box-shadow var(--t-fast); }
+.chip:hover:not(:disabled):not(.on) { border-color: var(--rose); }
+.chip.on { border-color: var(--rose); background: rgba(249, 161, 169, .18); color: var(--mist); box-shadow: inset 0 0 0 1px var(--rose); }
+.chip.soon { opacity: .5; border-style: dashed; cursor: not-allowed; }
+.chip-swatch { width: 14px; height: 14px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .25); }
+.chip-soon { font-size: 11.5px; letter-spacing: .07em;  color: var(--blush); }
+.pg { display: grid; grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: 10px; }
+.pr { aspect-ratio: 1; padding: 0; border: 1px solid var(--line); border-radius: var(--button-r); overflow: hidden; background: var(--pearl); position: relative; transition: transform var(--t-fast) var(--ease), box-shadow var(--t-fast), border-color var(--t-fast); }
+.pr img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pr.no-img::after { content: attr(data-label); color: rgba(25, 15, 27, .4); font: 400 1.1rem var(--serif); }
+.pr:hover:not(.on) { transform: translateY(-2px); }
+.pr.on { border-color: var(--rose); box-shadow: 0 0 0 2px var(--plum), 0 0 0 4px var(--rose); }
+.mz { display: none; margin-top: 18px; } .mz.show { display: block; animation: rise var(--t-mid) var(--ease) both; }
+.button-row { margin-top: 26px; display: flex; gap: 12px; flex-wrap: wrap; }
+.review { padding: 18px 22px; border: 1px solid var(--line); border-radius: var(--r); margin-bottom: 20px; background: var(--surf); font-size: 14.5px; }
+.review div { display: flex; justify-content: space-between; gap: 16px; padding: 7px 0; border-bottom: 1px solid var(--line); }
+.review div:last-child { border: 0; } .review span { color: var(--muted); }
+
+/* ---------- Forms ---------- */
+label.f { display: block; margin-bottom: 14px; font-size: 13px; color: var(--muted); }
+label.f input { display: block; width: 100%; margin-top: 6px; padding: 13px 14px; font: inherit; font-size: 15px; color: var(--mist); background: rgba(255, 255, 255, .04); border: 1px solid var(--line-strong); border-radius: var(--r); transition: border-color var(--t-fast), box-shadow var(--t-fast), background var(--t-fast); }
+label.f input:focus { outline: none; border-color: var(--rose); box-shadow: 0 0 0 3px rgba(249, 161, 169, .2); background: rgba(255, 255, 255, .06); }
+label.f.bad input { border-color: var(--blush); }
+.er { display: none; color: var(--blush); font-size: 12.5px; margin-top: 5px; }
+label.f.bad .er { display: block; }
+.r2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.co { display: grid; grid-template-columns: 1.1fr .9fr; gap: 56px; padding-bottom: 60px; }
+.co h2 { margin-bottom: 18px; font-weight: 300; }
+.fine { color: var(--muted); font-size: 12.5px; margin-top: 14px; }
+
+/* ---------- Bag drawer ---------- */
+.bag-back { position: fixed; inset: 0; z-index: 50; background: rgba(12, 6, 13, .68); backdrop-filter: blur(5px); opacity: 0; pointer-events: none; transition: opacity var(--t-mid); }
+.bag-back.open { opacity: 1; pointer-events: auto; }
+#bag { position: fixed; top: 0; right: 0; bottom: 0; z-index: 60; width: min(420px, 100vw); padding: 26px 28px; display: flex; flex-direction: column; background: var(--plum-2); border-left: 1px solid var(--line); transform: translateX(105%); transition: transform 560ms var(--ease); }
+#bag.open { transform: none; }
+.bag-head { display: flex; justify-content: space-between; align-items: center; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+.bag-head h3 { font-size: 1.8rem; font-weight: 300; }
+.bag-close { font-size: 13px; letter-spacing: .09em;  color: var(--muted); } .bag-close:hover { color: var(--mist); }
+#bl { flex: 1; overflow-y: auto; padding: 8px 0; }
+.bag-empty { color: var(--muted); padding: 30px 0; }
+.bi { display: grid; grid-template-columns: 64px 1fr auto; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+.bi .ph { aspect-ratio: 4 / 5; }
+.bi .bi-id { display: block; font-size: 12px; letter-spacing: .07em;  color: var(--muted); }
+.bi b { font: 500 1.1rem var(--serif); display: block; }
+.bi small { color: var(--muted); display: block; line-height: 1.5; }
+.bi button { font-size: 12px; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; } .bi button:hover { color: var(--blush); }
+.bag-foot { padding-top: 16px; border-top: 1px solid var(--line); }
+.bag-foot .total { display: flex; justify-content: space-between; margin-bottom: 4px; } .bag-foot small { color: var(--muted); display: block; margin-bottom: 16px; }
+.bag-foot .btn { width: 100%; }
+
+/* ---------- Footer ---------- */
+footer { position: relative; margin-top: 0; background: linear-gradient(180deg, var(--plum), var(--plum-2)); }
+footer::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(84, 78, 88, .9), rgba(249, 161, 169, .8), rgba(84, 78, 88, .9), transparent); }
+.ft { display: grid; grid-template-columns: 1.4fr 1fr; gap: 56px; padding: 72px 0 40px; }
+.ft h2 { font-size: 2.2rem; font-weight: 300; margin-bottom: 10px; }
+.ft .s { color: var(--muted); max-width: 44ch; margin-bottom: 22px; }
+.sub { display: flex; max-width: 440px; }
+.sub input { flex: 1; min-width: 0; padding: 13px 14px; font: inherit; color: var(--mist); background: rgba(255, 255, 255, .04); border: 1px solid var(--line-strong); border-right: 0; border-radius: var(--r) 0 0 var(--r); }
+.sub input:focus { outline: none; border-color: var(--rose); }
+.sub button { min-height: 48px; padding: 0 22px; background: var(--rose); color: var(--plum); font-size: 12px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; white-space: nowrap; border: 1px solid var(--rose); border-radius: 0 16px 16px 0; transition: background 220ms var(--ease), border-color 220ms var(--ease), color 220ms var(--ease); }
+.sub button:hover { background: var(--blush); border-color: var(--blush); }
+#sm { display: block; min-height: 1.5em; margin-top: 10px; font-size: 13px; color: var(--blush); }
+.cc b { display: block; font-size: 12.5px; letter-spacing: .1em;  color: var(--rose); margin-bottom: 14px; font-weight: 500; }
+.cc a { display: block; padding: 5px 0; color: var(--muted); } .cc a:hover { color: var(--mist); }
+.soc { display: flex; gap: 12px; padding-bottom: 28px; }
+.soc a { width: 40px; height: 40px; display: grid; place-items: center; border: 1px solid var(--line-strong); border-radius: 50%; color: var(--muted); transition: color var(--t-fast), border-color var(--t-fast); }
+.soc a:hover { color: var(--mist); border-color: var(--rose); } .soc svg { width: 18px; height: 18px; }
+.fb { border-top: 1px solid var(--line); padding: 22px 0 32px; color: var(--muted); font-size: 12.5px; }
+
+/* ---------- Motion ---------- */
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes bump { 0% { transform: scale(1); } 35% { transform: scale(1.3); } 100% { transform: scale(1); } }
+@keyframes maskUp { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0); } }
+@keyframes settle { from { transform: scale(1.06); } to { transform: none; } }
+@keyframes shimmer { to { background-position: 200% 0; } }
+.page { animation: rise 420ms var(--ease) both; }
+.route-entry-text { animation: rise 760ms var(--ease) both; animation-delay: var(--route-entry-delay, 0ms); }
+.reveal { opacity: 0; transform: translateY(16px); transition: opacity var(--t-slow) var(--ease), transform var(--t-slow) var(--ease); transition-delay: var(--d, 0ms); }
+.reveal.in { opacity: 1; transform: none; }
+/* opening sequence — runs once per visit, ~1s, never blocks interaction */
+body.is-intro header { animation: fade 600ms var(--ease) backwards; }
+body.is-intro .showcase-header { animation: fade 700ms var(--ease) 100ms backwards; }
+body.is-intro .himg { animation: maskUp 1000ms var(--ease-apple) 120ms backwards; }
+body.is-intro .himg img { animation: settle 1200ms var(--ease) 120ms backwards; }
+body.is-intro .design-img-wrap { animation: maskUp 1000ms var(--ease-apple) 260ms backwards; }
+body.is-intro .hero-design-id, body.is-intro .hero-copy h1, body.is-intro .lede, body.is-intro .hero-copy .btn { animation: rise 800ms var(--ease) backwards; }
+body.is-intro .hero-design-id { animation-delay: 380ms; } body.is-intro .hero-copy h1 { animation-delay: 460ms; }
+body.is-intro .lede { animation-delay: 560ms; } body.is-intro .hero-copy .btn { animation-delay: 660ms; }
+.himg::before { animation: shimmer 9s linear infinite; }
+/* opening: fine rose light sweep across the hero image, header hairline draws, mark is drawn */
+.himg::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0; background: linear-gradient(105deg, transparent 38%, rgba(254, 201, 206, .3) 50%, transparent 62%); }
+body.is-intro .himg::after { animation: sweep 1500ms var(--ease-apple) 700ms both; }
+body.is-intro header::after { animation: lineDraw 1200ms var(--ease) 150ms backwards; }
+body.is-intro .brand svg path { stroke-dasharray: 80; animation: draw 1100ms var(--ease) 100ms backwards; }
+@keyframes sweep { 0% { opacity: 0; transform: translateX(-100%); } 25% { opacity: 1; } 100% { opacity: 0; transform: translateX(100%); } }
+@keyframes lineDraw { from { transform: scaleX(0); } to { transform: none; } }
+@keyframes draw { from { stroke-dashoffset: 80; } to { stroke-dashoffset: 0; } }
+@media (scripting: none) { .reveal { opacity: 1; transform: none; } }
+@media (hover: hover) {
+  .card:hover .ph { transform: translateY(-3px); box-shadow: 0 30px 50px -30px rgba(25, 15, 27, .7); }
+  .card:hover .ph img, .rcard:hover .ph img { transform: scale(1.025); }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 860px) {
+  .bagbtn { display: grid; }
+  .fab { display: none; }
+  .hero-copy, .pdp, .info-grid, .co, .ft { grid-template-columns: minmax(0, 1fr); }
+  .pdp-media { position: static; } .info-grid { gap: 0; } .co, .ft { gap: 36px; }
+  .hero-copy { gap: 16px; }
+  .hero-copy h1 { font-size: clamp(2.6rem, 11vw, 4rem); }
+  .rail-nav { display: none; } .rail-sec, .blk { padding-top: 56px; }
+  .steps button { padding: 14px 12px; }
+}
+@media (max-width: 700px) { .grid { grid-template-columns: repeat(2, 1fr); gap: 30px 14px; } .hero-copy .btn, .button-row .btn { width: 100%; } }
+@media (max-width: 600px) {
+  .w { padding: 0 18px; } .rail-sec, .blk { padding-left: 18px; padding-right: 18px; }
+  :root { --header-h: 66px; } .brand span { font-size: 20px; }
+  .hr { gap: 6px; }
+  .wishlist-header, .bagbtn { width: 38px; height: 38px; flex-basis: 38px; }
+  .wishlist-header svg { width: 20px; height: 20px; }
+  .hero { padding-top: 28px; }
+  .hero .himg { margin-inline: 18px; }
+  .hero-copy { padding: 28px 18px 38px; }
+  .home-media-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-top: 34px; }
+  .r2 { grid-template-columns: 1fr; }
+  .rcard { flex-basis: 62%; } .heri { padding: 80px 18px; }
+}
+@media (max-width: 520px) { .card h3 { font-size: 1.2rem; } .card p { font-size: 13px; } .card .card-price { font-size: 13px; } .cfg-summary dl { grid-template-columns: 74px 1fr; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  .reveal { opacity: 1 !important; transform: none !important; }
+  .route-entry-text { animation: none !important; animation-delay: 0ms !important; }
+}
+/* ---------- Production markup adapters ---------- */
+:root {
+  /* Semantic tokens for the current application */
+  --color-page-background: var(--plum);
+  --color-surface: var(--plum-2);
+  --color-surface-secondary: var(--surf);
+  --color-text-primary: var(--mist);
+  --color-text-secondary: var(--muted);
+  --color-primary-button: var(--rose);
+  --color-primary-button-hover: var(--rose-hi);
+  --color-secondary-button: var(--smoky);
+  --color-border: var(--line);
+  --color-selected-state: var(--rose);
+  --color-focus-ring: var(--rose);
+  --color-error: var(--blush);
+  --color-success: var(--blush);
+
+  /* Legacy token aliases used by the app's existing inline content */
+  --color-deep-rose: var(--rose);
+  --color-dusty-pink: var(--rose);
+  --color-buttercream: var(--plum-3);
+  --color-warm-peach: var(--surf);
+  --color-soft-cocoa: var(--mist);
+  --color-warm-cream: var(--plum);
+  --color-cherry-rose: var(--rose);
+  --color-vintage-rose: var(--mist);
+  --color-ballet-pink: var(--surf);
+  --color-vanilla-cream: var(--plum);
+  --color-petal-white: var(--pearl);
+  --color-plum-deep: var(--mist);
+  --color-plum-aubergine: var(--blush);
+  --color-plum-muted: var(--muted);
+  --color-rose-dusty: var(--rose);
+  --color-rose-blush: var(--blush);
+  --color-ivory-warm: var(--mist);
+
+  --bg-main: var(--plum);
+  --bg-secondary: var(--plum-2);
+  --bg-surface: var(--plum-2);
+  --bg-card: var(--surf);
+  --bg-editorial: var(--plum-3);
+  --bg-dark: var(--plum);
+  --bg-drawer: var(--plum-2);
+  --text-primary: var(--mist);
+  --text-secondary: var(--muted);
+  --text-muted: var(--muted);
+  --text-light: var(--mist);
+  --text-blush: var(--blush);
+  --btn-primary-bg: var(--rose);
+  --btn-primary-text: var(--plum);
+  --btn-primary-hover: var(--rose-hi);
+  --btn-secondary-border: var(--line-strong);
+  --btn-secondary-text: var(--mist);
+  --btn-secondary-hover-bg: rgba(249, 161, 169, .1);
+  --border-color: var(--line);
+  --border-subtle: var(--line);
+  --border-medium: var(--line-strong);
+  --border-focus: var(--rose);
+  --state-hover: var(--rose);
+  --state-selected-bg: rgba(249, 161, 169, .18);
+  --state-selected-border: var(--rose);
+  --state-selected-text: var(--mist);
+  --state-focus: var(--rose);
+  --state-error: var(--blush);
+  --state-success: var(--blush);
+  --shadow-soft: 0 8px 24px rgba(0, 0, 0, .24);
+  --shadow-card: 0 12px 30px rgba(0, 0, 0, .3);
+  --shadow-elevated: 0 18px 42px rgba(0, 0, 0, .42);
+  --dur-fast: var(--t-fast);
+  --dur-mid: var(--t-mid);
+  --dur-slow: var(--t-slow);
+  --dur-hero: var(--t-slow);
+  --ease-out: var(--ease);
+  --ease-spring: var(--ease);
+  --ease-standard: var(--ease);
+  --bg: var(--plum);
+  --bg2: var(--plum-2);
+  --bl: var(--rose);
+  --ink: var(--mist);
+  --mu: var(--muted);
+  --ln: var(--line);
+  --sf: var(--plum-2);
+  --s: var(--serif);
+  --n: var(--sans);
+}
+
+.menu[hidden] { display: none; }
+.reveal.in-view { opacity: 1; transform: none; }
+.himg img, .design-img-wrap img, .detail-card-img {
+  transition: opacity 300ms cubic-bezier(.4, 0, .2, 1), transform 420ms cubic-bezier(.4, 0, .2, 1);
+  will-change: opacity, transform;
+}
+.himg img.is-changing, .design-img-wrap img.is-changing, .detail-card-img.is-changing { opacity: 0; transform: scale(.985); }
+
+/* Existing illustration containers use .ph instead of the preview's .mat. */
+.ph {
+  position: relative; display: flex; align-items: center; justify-content: center;
+  overflow: hidden; background: var(--pearl); border-radius: var(--r);
+}
+.ph img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.design-frame { min-width: 0; }
+.design-img-wrap {
+  position: relative; aspect-ratio: 4 / 5; overflow: hidden; display: flex;
+  align-items: center; justify-content: center; background: var(--pearl); border-radius: var(--r);
+}
+.design-img-wrap img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.detail-card-img { flex: 0 0 96px; width: 96px; height: 54px; object-fit: contain; background: var(--pearl); }
+.rail-wrap { min-width: 0; }
+.rail-nav button { width: 40px; height: 40px; border: 1px solid var(--line-strong); border-radius: 50%; display: grid; place-items: center; }
+.rail-nav button:disabled { opacity: .3; cursor: default; }
+.pdp > div:first-child { position: sticky; top: 100px; display: grid; gap: 14px; min-width: 0; }
+.pdp > div:first-child .ph { aspect-ratio: 4 / 5; }
+.pdp .det { aspect-ratio: 3 / 1.1; overflow: hidden; background: var(--pearl); border-radius: var(--r); }
+.pdp .det img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.bi img { width: 64px; height: 80px; object-fit: contain; display: block; background: var(--pearl); border-radius: var(--r); }
+.bi { align-items: start; }
+.bag-foot { padding-top: 16px; border-top: 1px solid var(--line); }
+.bag-foot .total { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.bag-foot small { display: block; color: var(--muted); margin-bottom: 16px; }
+.bag-foot .btn { width: 100%; }
+
+/* Supporting production pages */
+#cf { padding: 24px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surf); }
+.info-card, .measure-card {
+  padding: 24px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surf);
+}
+.info-card h2, .measure-card h2 { font-size: 1.5rem; margin-bottom: 10px; }
+.info-card p, .measure-card p { color: var(--muted); }
+.info-card { min-width: 0; }
+.measure-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 40px; }
+.measure-num { display: block; color: var(--rose); font-size: 12px; letter-spacing: .1em; margin-bottom: 14px; }
+.plain-link { color: var(--rose); text-decoration: underline; text-underline-offset: 3px; }
+.plain-link:hover { color: var(--rose-hi); }
+#cf h2, .co > div > h2 { color: var(--mist); }
+#cf input::placeholder, .sub input::placeholder { color: var(--muted); opacity: .8; }
+#modal {
+  position: fixed; inset: 0; z-index: 80; display: none; align-items: center; justify-content: center;
+  padding: 20px; background: rgba(12, 6, 13, .72); backdrop-filter: blur(5px);
+}
+#modal.show { display: flex; }
+.pay {
+  width: min(440px, 100%); padding: 28px; background: var(--plum-2);
+  border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-elevated);
+  animation: rise var(--t-fast) var(--ease) both;
+}
+.pay h3 { font-size: 1.7rem; font-weight: 300; }
+#pa { color: var(--muted); }
+
+/* ---------- Light palette (Dark Mode declarations above remain the defaults) ---------- */
+html[data-theme="light"] {
+  color-scheme: light;
+  --plum: #FAF7F2;
+  --plum-2: #F1E8DE;
+  --plum-3: #F6E8E6;
+  --smoky: #796D65;
+  --rose: #D5A09A;
+  --blush: #F6E8E6;
+  --smoky-hi: #796D65;
+  --rose-hi: #B97D77;
+  --pearl: #FFFFFF;
+  --mist: #29211F;
+  --muted: #796D65;
+  --surf: #FFFFFF;
+  --line: #E4D8CC;
+  --line-strong: #E4D8CC;
+  --irid: linear-gradient(120deg, #796D65, #D5A09A 40%, #F6E8E6 60%, #D5A09A 80%, #796D65);
+  --light-button: #29211F;
+  --light-button-text: #FFFFFF;
+  --light-input: #FFFCF8;
+  --light-hover: #B97D77;
+
+  /* Semantic tokens and legacy aliases consumed by rendered pages. */
+  --color-page-background: #FAF7F2;
+  --color-surface: #F1E8DE;
+  --color-surface-secondary: #FFFFFF;
+  --color-text-primary: #29211F;
+  --color-text-secondary: #796D65;
+  --color-primary-button: #29211F;
+  --color-primary-button-hover: #B97D77;
+  --color-secondary-button: #F1E8DE;
+  --color-border: #E4D8CC;
+  --color-selected-state: #D5A09A;
+  --color-focus-ring: #B97D77;
+  --color-error: #B97D77;
+  --color-success: #796D65;
+  --color-deep-rose: #D5A09A;
+  --color-dusty-pink: #D5A09A;
+  --color-buttercream: #F6E8E6;
+  --color-warm-peach: #F6E8E6;
+  --color-soft-cocoa: #29211F;
+  --color-warm-cream: #FAF7F2;
+  --color-cherry-rose: #D5A09A;
+  --color-vintage-rose: #29211F;
+  --color-ballet-pink: #F6E8E6;
+  --color-vanilla-cream: #FAF7F2;
+  --color-petal-white: #FFFFFF;
+  --color-plum-deep: #29211F;
+  --color-plum-aubergine: #D5A09A;
+  --color-plum-muted: #796D65;
+  --color-rose-dusty: #D5A09A;
+  --color-rose-blush: #F6E8E6;
+  --color-ivory-warm: #FAF7F2;
+  --bg-main: #FAF7F2;
+  --bg-secondary: #F1E8DE;
+  --bg-surface: #F1E8DE;
+  --bg-card: #FFFFFF;
+  --bg-editorial: #F6E8E6;
+  --bg-dark: #FAF7F2;
+  --bg-drawer: #F1E8DE;
+  --text-primary: #29211F;
+  --text-secondary: #796D65;
+  --text-muted: #796D65;
+  --text-light: #29211F;
+  --text-blush: #B97D77;
+  --btn-primary-bg: #29211F;
+  --btn-primary-text: #FFFFFF;
+  --btn-primary-hover: #B97D77;
+  --btn-secondary-border: #E4D8CC;
+  --btn-secondary-text: #29211F;
+  --btn-secondary-hover-bg: #F6E8E6;
+  --border-color: #E4D8CC;
+  --border-subtle: #E4D8CC;
+  --border-medium: #E4D8CC;
+  --border-focus: #B97D77;
+  --state-hover: #B97D77;
+  --state-selected-bg: #F6E8E6;
+  --state-selected-border: #D5A09A;
+  --state-selected-text: #29211F;
+  --state-focus: #B97D77;
+  --state-error: #B97D77;
+  --state-success: #796D65;
+  --bg: #FAF7F2;
+  --bg2: #F1E8DE;
+  --bl: #D5A09A;
+  --ink: #29211F;
+  --mu: #796D65;
+  --ln: #E4D8CC;
+  --sf: #F1E8DE;
+}
+
+html[data-theme="light"] body::before {
+  background:
+    radial-gradient(60rem 38rem at 108% 112%, rgba(213, 160, 154, .12), transparent 64%),
+    radial-gradient(46rem 30rem at -10% 114%, rgba(241, 232, 222, .72), transparent 62%),
+    radial-gradient(40rem 26rem at 86% -12%, rgba(246, 232, 230, .72), transparent 60%),
+    var(--plum);
+}
+html[data-theme="light"] header { background: rgba(250, 247, 242, .82); }
+html[data-theme="light"] header.scrolled { background: rgba(250, 247, 242, .96); }
+html[data-theme="light"] header::after,
+html[data-theme="light"] footer::before {
+  background: linear-gradient(90deg, transparent, rgba(228, 216, 204, .9), rgba(213, 160, 154, .78), rgba(228, 216, 204, .9), transparent);
+}
+html[data-theme="light"] ::selection { color: #29211F; background: #D5A09A; }
+html[data-theme="light"] .hm:hover span { background: #B97D77; }
+html[data-theme="light"] .bagbtn:hover { border-color: #B97D77; background: rgba(213, 160, 154, .14); }
+html[data-theme="light"] .wishlist-header { color: #29211F; border-color: #E4D8CC; }
+html[data-theme="light"] .wishlist-header:hover { color: #B97D77; border-color: #B97D77; background: rgba(213, 160, 154, .14); }
+html[data-theme="light"] .wishlist-header:focus-visible { outline-color: #B97D77; }
+html[data-theme="light"] .wishlist-badge { color: #29211F; background: #D5A09A; border-color: #FAF7F2; }
+html[data-theme="light"] .fab {
+  color: #FFFFFF; background: #29211F; box-shadow: 0 14px 34px -12px rgba(41, 33, 31, .28);
+}
+html[data-theme="light"] .fab #cnt { color: #29211F; background: #D5A09A; }
+html[data-theme="light"] .menu-back,
+html[data-theme="light"] .bag-back,
+html[data-theme="light"] #modal { background-color: rgba(41, 33, 31, .48); }
+html[data-theme="light"] .menu-panel,
+html[data-theme="light"] #bag { background: #F1E8DE; }
+html[data-theme="light"] .menu-panel nav a:hover { color: #B97D77; }
+html[data-theme="light"] .menu-x:hover,
+html[data-theme="light"] .crumb a:hover,
+html[data-theme="light"] .bag-close:hover,
+html[data-theme="light"] .cc a:hover { color: #B97D77; }
+html[data-theme="light"] .btn:not(.ghost),
+html[data-theme="light"] .heri .btn {
+  color: #FFFFFF; border-color: #29211F;
+  background: linear-gradient(#B97D77, #B97D77) no-repeat left center / 0% 100%, #29211F;
+}
+html[data-theme="light"] .btn:not(.ghost):hover:not(:disabled),
+html[data-theme="light"] .heri .btn:hover:not(:disabled) {
+  color: #FFFFFF; border-color: #B97D77; background-size: 100% 100%;
+  box-shadow: 0 8px 18px -12px rgba(185, 125, 119, .24);
+}
+html[data-theme="light"] .btn.ghost {
+  color: #29211F; border-color: #E4D8CC;
+  background: linear-gradient(#B97D77, #B97D77) no-repeat left center / 0% 100%, transparent;
+}
+html[data-theme="light"] .btn.ghost:hover:not(:disabled) {
+  color: #FFFFFF; border-color: #B97D77; background-size: 100% 100%;
+}
+html[data-theme="light"] .btn:disabled { color: #796D65; border-color: #E4D8CC; }
+html[data-theme="light"] .lnk { border-color: rgba(213, 160, 154, .62); }
+html[data-theme="light"] .lnk:hover,
+html[data-theme="light"] .plain-link:hover { color: #B97D77; }
+html[data-theme="light"] .lnk:hover { border-color: #B97D77; }
+html[data-theme="light"] .ph.no-img::after,
+html[data-theme="light"] .pr.no-img::after { color: rgba(41, 33, 31, .4); }
+html[data-theme="light"] .hero .himg,
+html[data-theme="light"] .home-media-frame { background: linear-gradient(180deg, #F1E8DE, #F6E8E6); }
+html[data-theme="light"] .card,
+html[data-theme="light"] .card-info,
+html[data-theme="light"] .rcard { background: #FFFFFF; }
+html[data-theme="light"] .card:hover h3 { color: #B97D77; }
+html[data-theme="light"] .heri {
+  color: #29211F; background: linear-gradient(165deg, #F6E8E6 0%, #F6E8E6 58%, #F1E8DE 130%);
+}
+html[data-theme="light"] .heri h2 { color: #29211F; }
+html[data-theme="light"] .heri p { color: #796D65; }
+html[data-theme="light"] #price,
+html[data-theme="light"] .chip-soon,
+html[data-theme="light"] .cfg-alert.error { color: #B97D77; }
+html[data-theme="light"] .cfg-alert.success { color: #796D65; }
+html[data-theme="light"] .chip.on { color: #29211F; background: #F6E8E6; }
+html[data-theme="light"] .chip.on,
+html[data-theme="light"] .pr.on { border-color: #D5A09A; }
+html[data-theme="light"] .chip:hover:not(:disabled):not(.on) { border-color: #B97D77; }
+html[data-theme="light"] .pr.on { box-shadow: 0 0 0 2px #FAF7F2, 0 0 0 4px #D5A09A; }
+html[data-theme="light"] label.f input,
+html[data-theme="light"] .sub input {
+  color: #29211F; background: #FFFCF8; border-color: #E4D8CC; color-scheme: light;
+}
+html[data-theme="light"] label.f input:focus,
+html[data-theme="light"] .sub input:focus {
+  border-color: #B97D77; background: #FFFCF8; box-shadow: 0 0 0 3px rgba(185, 125, 119, .18);
+}
+html[data-theme="light"] label.f input::placeholder,
+html[data-theme="light"] .sub input::placeholder { color: #796D65; }
+html[data-theme="light"] label.f.bad input { border-color: #B97D77; }
+html[data-theme="light"] .er,
+html[data-theme="light"] #sm { color: #B97D77; }
+html[data-theme="light"] #cf,
+html[data-theme="light"] .info-card,
+html[data-theme="light"] .measure-card { background: #FFFFFF; }
+html[data-theme="light"] #modal .pay { background: #FFFFFF; }
+html[data-theme="light"] .sub button {
+  color: #FFFFFF; background: #29211F; border-color: #29211F;
+}
+html[data-theme="light"] .sub button:hover { background: #B97D77; border-color: #B97D77; }
+html[data-theme="light"] .bi button:hover { color: #B97D77; }
+html[data-theme="light"] .soc a:hover { color: #B97D77; border-color: #B97D77; }
+
+@media (max-width: 860px) {
+  .pdp > div:first-child { position: static; }
+  .measure-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .r2 { grid-template-columns: 1fr; }
+  #cf { padding: 18px; }
+}
+.wish-toggle {
+  position: absolute; z-index: 4; top: 9px; right: 9px; width: 42px; height: 42px;
+  display: grid; place-items: center; padding: 0; border: 1px solid var(--line-strong);
+  border-radius: 50%; color: var(--mist); background: rgba(33, 20, 38, .92);
+  transition: color 220ms var(--ease), background 220ms var(--ease), border-color 220ms var(--ease), transform 220ms var(--ease);
+}
+.wish-toggle svg { width: 18px; height: 18px; display: block; overflow: visible; }
+.wish-toggle path { fill: transparent; stroke: currentColor; stroke-width: 1.65; stroke-linecap: round; stroke-linejoin: round; transition: fill 220ms var(--ease), transform 220ms var(--ease); }
+.wish-toggle:hover { border-color: var(--rose); transform: translateY(-1px); }
+.wish-toggle[aria-pressed="true"] { color: var(--rose); background: rgba(33, 20, 38, .92); border-color: var(--rose); }
+.wish-toggle[aria-pressed="true"] path { fill: var(--rose); transform: scale(.96); }
+.wish-toggle:focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; }
+.wishlist-link { display: flex !important; align-items: center; gap: 12px; }
+.wishlist-link svg { width: 19px; height: 19px; flex: 0 0 19px; stroke: currentColor; stroke-width: 1.6; fill: none; }
+.wishlist-count { min-width: 22px; height: 22px; margin-left: auto; padding: 0 6px; display: inline-grid; place-items: center; border: 1px solid var(--line-strong); border-radius: 999px; color: var(--mist); font: 500 11px/1 var(--sans); font-variant-numeric: tabular-nums; }
+.wish-toast {
+  position: fixed; z-index: 100; left: 50%; bottom: 24px; max-width: min(90vw, 360px); padding: 12px 18px;
+  border: 1px solid var(--line-strong); border-radius: 14px; color: var(--mist); background: var(--plum-2);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .25); font-size: 13px; text-align: center;
+  transform: translateX(-50%); animation: rise 180ms var(--ease) both;
+}
+.wish-toast[hidden] { display: none; }
+html[data-theme="light"] .wish-toggle { color: #29211F; background: rgba(250, 247, 242, .94); border-color: #E4D8CC; }
+html[data-theme="light"] .wish-toggle:hover { border-color: #B97D77; }
+html[data-theme="light"] .wish-toggle[aria-pressed="true"] { color: #D5A09A; background: rgba(250, 247, 242, .94); border-color: #D5A09A; }
+html[data-theme="light"] .wish-toggle[aria-pressed="true"] path { fill: #D5A09A; }
+html[data-theme="light"] .wishlist-count { color: #29211F; border-color: #E4D8CC; }
+html[data-theme="light"] .wish-toast { color: #29211F; background: #FFFFFF; border-color: #E4D8CC; box-shadow: 0 12px 30px rgba(41, 33, 31, .16); }
+@media (max-width: 860px) { .wish-toast { bottom: 82px; } }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="w hd">
+      <div class="hl">
+        <button class="hm" id="hm" type="button" aria-expanded="false" aria-controls="menu"
+          aria-label="Open menu"><span></span><span></span><span></span></button>
+      </div>
+      <a class="brand" href="#/" aria-label="Siarah">
+        <svg viewBox="0 0 22 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round">
+          <path d="M1 2C1 10 5 16 11 18 11 10 8 4 1 2Z" />
+          <path d="M21 2C21 10 17 16 11 18 11 10 14 4 21 2Z" />
+          <path d="M11 3C7 7 7 13 11 17 15 13 15 7 11 3Z" />
+        </svg>
+        <span>SIARAH</span>
+      </a>
+      <div class="hr">
+        <button class="wishlist-header" data-wishlist-open type="button" aria-label="Open wishlist, 0 saved designs" title="Open wishlist">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.7a5.5 5.5 0 0 0-7.8 0L12 5.8l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.4 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z" /></svg>
+          <span class="wishlist-badge" data-wishlist-count aria-hidden="true" hidden>0</span>
+        </button>
+        <button class="bagbtn" data-bag type="button" aria-label="Open shopping bag, 0 items">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 8h14l-1 12H6L5 8z" />
+            <path d="M9 8V6a3 3 0 0 1 6 0v2" />
+          </svg>
+          <span class="bag-count" aria-hidden="true">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="menu" id="menu" hidden>
+    <button class="menu-back" type="button" data-menu-close aria-label="Close menu"></button>
+    <div class="menu-panel" role="dialog" aria-modal="true" aria-labelledby="menu-title">
+      <button class="menu-x" type="button" data-menu-close>Close</button>
+      <p id="menu-title" class="kicker"
+        style="letter-spacing:.22em;text-transform:uppercase;font-size:12px;color:var(--color-rose-blush);margin-bottom:8px">
+        Menu</p>
+      <nav aria-label="Site">
+        <a href="#/page/about">About Us</a>
+        <a href="#/collection">Customise</a>
+        <a href="#/wishlist" class="wishlist-link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.7a5.5 5.5 0 0 0-7.8 0L12 5.8l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.4 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z" /></svg><span>Wishlist</span><span class="wishlist-count" data-wishlist-count aria-label="0 saved designs">0</span></a>
+        <a href="#/sale">Sale</a>
+      </nav>
+    </div>
+  </div>
+  <main id="app"></main>
+  <footer>
+    <div class="w">
+      <div class="ft">
+        <div>
+          <h2>Join Siarah</h2>
+          <p class="s">Be the first to know about new designs, prints and fabrics. Consider this your early access.</p>
+          <div class="sub"><input id="se" type="email" placeholder="Enter email address"
+              aria-label="Email address"><button id="sb">Subscribe</button></div><span id="sm"></span>
+        </div>
+        <div class="cc"><b>Customer care</b><a href="#/page/contact">Contact</a><a href="#/page/shipping">Shipping</a><a
+            href="#/page/returns">Returns</a><a href="#/page/measure">Measurement guide</a></div>
+      </div>
+      <div class="soc"><a href="https://www.instagram.com/siarah_official/" target="_blank" rel="noopener"
+          aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="3" y="3" width="18" height="18" rx="5" />
+            <circle cx="12" cy="12" r="4" />
+            <circle cx="17.5" cy="6.5" r=".7" fill="currentColor" />
+          </svg></a></div>
+      <div class="fb">Client preview. Campaign hero video and lifestyle photography have not been supplied — design
+        illustrations are shown instead. Satin and lace remain coming soon. Shipping and GST are still to be confirmed.
+      </div>
+    </div>
+  </footer>
+  <button class="fab" data-bag type="button" aria-label="Open shopping bag, 0 items"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M5 8h14l-1 12H6L5 8z" />
+      <path d="M9 8V6a3 3 0 0 1 6 0v2" />
+    </svg><span id="cnt" aria-hidden="true">0</span></button>
+  <div class="bag-back" id="bag-back" data-bag></div>
+  <aside id="bag" aria-label="Shopping bag">
+    <div class="bag-head">
+      <h3>Your bag</h3><button type="button" class="bag-close" data-bag aria-label="Close bag">Close</button>
+    </div>
+    <div id="bl"></div>
+    <div class="bag-foot">
+      <p class="total"><span>Total</span><b id="bt"></b></p>
+      <small>Shipping is charged separately.</small>
+      <a class="btn" id="bco" href="#/checkout">Checkout</a>
+      <button class="lnk" data-bag type="button">Continue browsing</button>
+    </div>
+  </aside>
+  <div id="modal" role="dialog" aria-modal="true" aria-labelledby="payment-title" aria-describedby="pa" aria-hidden="true">
+    <div class="pay">
+      <h3 id="payment-title">Payments are not enabled</h3>
+      <p id="pa" style="margin:10px 0 18px;color:var(--mu)">No payment or order is submitted in this public preview. Your bag stays unchanged, and checkout details are not sent or saved.</p>
+      <button class="btn" id="pcx" type="button">Return to checkout</button>
+    </div>
+  </div>
+  <div id="wishlist-toast" class="wish-toast" role="status" aria-live="polite" hidden></div>
+  <script>
+    const D = __DATA__;
+    const $ = s => document.querySelector(s), fmt = n => '₹' + new Intl.NumberFormat('en-IN').format(n);
+    const scrollBehavior = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+    let showcaseSwapTimer, menuCloseTimer, menuTransitionEnd, homeMotionQuery, homeMotionHandler;
+    let hasRouted = false, routeEntranceTimer = 0;
+    const showcaseFadeMs = 300;
+    const F = [{ id: 'linen-prints', n: 'Linen prints', c: '#E8D9C8' }, { id: 'linen-plains', n: 'Linen plains', c: '#D9CBB8' }, { id: 'chanderi-prints', n: 'Chanderi prints', c: '#EBCFCB' }, { id: 'chanderi-embroidery', n: 'Chanderi embroidery', c: '#E3C4C0' }, { id: 'organza', n: 'Organza', c: '#F3E6E3' }, { id: 'satin', n: 'Satin', c: '#CDB5A8', soon: 1 }, { id: 'lace', n: 'Lace', c: '#EFE4DD', soon: 1 }, { id: 'cotton-satin', n: 'Cotton satin', c: '#E6D2C8' }];
+    const PRICE = { 'linen-prints': 9999, 'linen-plains': 9999, 'chanderi-prints': 9999, 'chanderi-embroidery': 9999, 'organza': 16999, 'satin': 15999, 'lace': 18999, 'cotton-satin': 12999 };
+    const SIZES = ['XS', 'S', 'M', 'L', 'XL'];
+    // Existing preview limits; these require Siarah's approval before production launch.
+    const MEAS = { bust: [50, 160], waist: [50, 160], hips: [50, 160] };
+    const fab = id => F.find(f => f.id === id), des = id => D.designs.find(d => d.id === id), prt = id => D.prints.find(p => p.id === id), price = f => PRICE[f];
+    const liveFabrics = () => F.filter(f => !f.soon);
+    const fromPrice = Math.min(...liveFabrics().map(f => PRICE[f.id]));
+    const isLive = id => { const f = fab(id); return !!(f && !f.soon) };
+    const isSize = s => SIZES.includes(s);
+    const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    function cleanMeasurements(m) {
+      if (!m || typeof m !== 'object' || Array.isArray(m)) return null;
+      const clean = {};
+      for (const k of ['bust', 'waist', 'hips']) {
+        const raw = m[k], message = measMsg(k, raw == null ? raw : String(raw).trim());
+        if (message) return null;
+        clean[k] = Number(raw);
+      }
+      return clean;
+    }
+    function normalizeCart(items) {
+      if (!Array.isArray(items)) return [];
+      return items.map(i => {
+        if (!i || typeof i !== 'object') return null;
+        const d = typeof i.d === 'string' && des(i.d) ? i.d : null;
+        const f = typeof i.f === 'string' && isLive(i.f) ? i.f : null;
+        const p = typeof i.p === 'string' && prt(i.p) ? i.p : null;
+        const m = cleanMeasurements(i.m);
+        const s = m ? null : (isSize(i.s) ? i.s : null);
+        if (!d || !f || !p || (!m && !s)) return null;
+        // Preview only: a production backend must calculate and validate this price.
+        return { d, f, p, s, m, price: PRICE[f] };
+      }).filter(Boolean);
+    }
+    function normalizeWishlist(ids) {
+      if (!Array.isArray(ids)) return [];
+      return [...new Set(ids.filter(id => typeof id === 'string' && des(id)).map(String))];
+    }
+    const wishlistRepository = {
+      load() {
+        try { return normalizeWishlist(JSON.parse(localStorage.getItem('sr-wishlist') || '[]')) }
+        catch (_) { return [] }
+      },
+      save(ids) {
+        const normalized = normalizeWishlist(ids);
+        try { localStorage.setItem('sr-wishlist', JSON.stringify(normalized)) } catch (_) { }
+        return normalized;
+      }
+    };
+    let wishlist = wishlistRepository.load(), wishlistToastTimer = 0;
+    let cart = [];
+    try { cart = normalizeCart(JSON.parse(localStorage.getItem('sr-cart') || '[]')); localStorage.setItem('sr-cart', JSON.stringify(cart)) } catch (e) { cart = []; try { localStorage.removeItem('sr-cart') } catch (_) { } }
+    const save = () => { try { localStorage.setItem('sr-cart', JSON.stringify(cart)) } catch (e) { } paint() };
+    let P = { step: 1 };
+    const blankCfg = did => ({ d: did, f: null, p: null, s: null, m: false, mm: { bust: '', waist: '', hips: '' }, step: 2 });
+    function persistCfg() { try { sessionStorage.setItem('sr-cfg', JSON.stringify(P)) } catch (e) { } }
+    function loadCfg(did, prefab) {
+      let saved = null;
+      try { saved = JSON.parse(sessionStorage.getItem('sr-cfg') || 'null') } catch (e) { saved = null }
+      if (saved && saved.d === did) {
+        P = { ...blankCfg(did), ...saved, d: did, mm: saved.mm || { bust: '', waist: '', hips: '' } };
+      } else {
+        P = blankCfg(did);
+      }
+      if (prefab && isLive(prefab)) P.f = prefab;
+      if (P.f && !isLive(P.f)) P.f = null;
+      if (!prt(P.p)) P.p = null;
+      P.s = isSize(P.s) ? P.s : null;
+      P.m = P.m === true;
+      P.mm = P.mm && typeof P.mm === 'object' ? P.mm : { bust: '', waist: '', hips: '' };
+      P.step = Number.isInteger(P.step) && P.step >= 1 && P.step <= 5 ? P.step : (P.f ? 3 : 2);
+      persistCfg();
+    }
+    function paint() {
+      const c = $('#cnt'); if (c) c.textContent = cart.length;
+      document.querySelectorAll('.bag-count').forEach(el => el.textContent = cart.length);
+      document.querySelectorAll('.bagbtn, .fab').forEach(el => el.setAttribute('aria-label', `Open shopping bag, ${cart.length} ${cart.length === 1 ? 'item' : 'items'}`));
+      $('#bl').innerHTML = cart.length ? cart.map((i, k) => { const d = des(i.d), f = fab(i.f), p = prt(i.p), fit = i.m ? `Custom: bust ${i.m.bust} cm, waist ${i.m.waist} cm, hips ${i.m.hips} cm` : `Size ${i.s}`; return `<div class="bi"><img src="${d.main}" alt="${esc(d.name)}"><div><span class="bi-id">Design No. ${d.id} · Configuration ${k + 1}</span><b>${d.name}</b><br>${f.n} · ${p.name}<br>${fit}</div><div>${fmt(i.price)}<br><button data-rm="${k}" aria-label="Remove design No. ${d.id}, configuration ${k + 1}">Remove</button></div></div>` }).join('') : '<p style="padding:16px 0;color:var(--color-plum-muted)">Your bag is empty.</p>';
+      $('#bt').textContent = fmt(cart.reduce((s, i) => s + (i.price || 0), 0)); $('#bco').style.display = cart.length ? '' : 'none';
+    }
+    function wishlistButton(d) {
+      const saved = wishlist.includes(d.id);
+      const action = saved ? 'Remove' : 'Add';
+      const label = `${action} design No. ${d.id} ${d.name} ${saved ? 'from' : 'to'} wishlist`;
+      return `<button class="wish-toggle" type="button" data-wish-toggle="${esc(d.id)}" aria-label="${esc(label)}" aria-pressed="${saved}" title="${esc(label)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.7a5.5 5.5 0 0 0-7.8 0L12 5.8l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.4 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z" /></svg></button>`;
+    }
+    function paintWishlist() {
+      document.querySelectorAll('[data-wishlist-count]').forEach(el => {
+        el.textContent = wishlist.length;
+        el.setAttribute('aria-label', `${wishlist.length} saved ${wishlist.length === 1 ? 'design' : 'designs'}`);
+        if (el.classList.contains('wishlist-badge')) el.hidden = wishlist.length === 0;
+      });
+      document.querySelectorAll('.wishlist-header').forEach(button => {
+        button.setAttribute('aria-label', `Open wishlist, ${wishlist.length} saved ${wishlist.length === 1 ? 'design' : 'designs'}`);
+      });
+      document.querySelectorAll('[data-wish-toggle]').forEach(button => {
+        const d = des(button.dataset.wishToggle);
+        if (!d) return;
+        const saved = wishlist.includes(d.id);
+        const label = `${saved ? 'Remove' : 'Add'} design No. ${d.id} ${d.name} ${saved ? 'from' : 'to'} wishlist`;
+        button.setAttribute('aria-pressed', String(saved));
+        button.setAttribute('aria-label', label);
+        button.title = label;
+      });
+    }
+    function wishlistResults() {
+      const savedDesigns = wishlist.map(des).filter(Boolean);
+      if (!savedDesigns.length) return `<div class="empty wishlist-empty"><p>Your wishlist is empty.</p><p>Explore the collection and save your favourite designs for later.</p><a class="btn ghost btn-sm" href="#/collection">Explore the collection</a></div>`;
+      return designGrid(null, false, savedDesigns, false);
+    }
+    function refreshWishlistResults() {
+      const results = $('#wishlist-results');
+      if (results) results.innerHTML = wishlistResults();
+      paintWishlist();
+    }
+    function announceWishlist(message) {
+      const toast = $('#wishlist-toast');
+      if (!toast) return;
+      clearTimeout(wishlistToastTimer);
+      toast.textContent = message;
+      toast.hidden = false;
+      wishlistToastTimer = setTimeout(() => { toast.hidden = true; }, 2200);
+    }
+    function toggleWishlist(id) {
+      const d = des(id);
+      if (!d) return null;
+      const saved = wishlist.includes(d.id);
+      wishlist = wishlistRepository.save(saved ? wishlist.filter(savedId => savedId !== d.id) : [...wishlist, d.id]);
+      paintWishlist();
+      refreshWishlistResults();
+      announceWishlist(saved ? `${d.name} removed from wishlist.` : `${d.name} added to wishlist.`);
+      return !saved;
+    }
+    const fld = (k, l, t, val) => { const measurement = t === 'number', range = measurement ? MEAS[k] : null; return `<label class="f" data-k="${k}" for="field-${k}">${l}${measurement ? ' (cm)' : ''}<input id="field-${k}" name="${k}" type="${t || 'text'}" ${measurement ? `inputmode="decimal" min="${range[0]}" max="${range[1]}" step="1" required aria-describedby="error-${k}"` : ''} value="${esc(val)}"><span class="er" id="error-${k}" role="alert"></span></label>` };
+    function designGrid(fabricId, eager, designs = D.designs, showPrice = true) {
+      const amount = fabricId ? fmt(price(fabricId)) : 'From ' + fmt(fromPrice);
+      const loading = eager ? 'eager' : 'lazy';
+      return `<div class="grid">${designs.map(d => `<article class="card"><a class="card-link" href="#/customize/${encodeURIComponent(d.id)}" aria-label="Customise design No. ${esc(d.id)}: ${esc(d.name)}"><div class="ph"><img src="${d.main}" alt="${esc(d.name)}" loading="${loading}" decoding="async"></div><div class="card-info"><span class="card-id">Design No. ${esc(d.id)}</span><h3>${esc(d.name)}</h3><p>${esc(d.tagline)}</p>${showPrice ? `<p class="card-price">${amount}</p>` : ''}</div></a>${wishlistButton(d)}</article>`).join('')}</div>`;
+    }
+    function home() {
+      const hero = D.designs.find(d => d.id === '03') || D.designs[2] || D.designs[0];
+      const videoReference = D.designs.find(d => d.id === '07') || D.designs[6] || hero;
+      const photoReference = D.designs.find(d => d.id === '09') || D.designs[8] || hero;
+      const homeMedia = D.homeMedia || {};
+      const autoplay = matchMedia('(prefers-reduced-motion: reduce)').matches ? '' : 'autoplay';
+      const videoPanel = homeMedia.video
+        ? `<video class="home-media-video" id="home-campaign-video" src="${esc(homeMedia.video)}" ${autoplay} muted loop playsinline controls preload="metadata" aria-label="Siarah campaign video"></video>`
+        : `<img class="home-media-reference" src="${videoReference.main}" alt="${esc(videoReference.name)} corset illustration, temporary campaign video visual" loading="lazy" decoding="async">`;
+      const photoPanel = homeMedia.photo
+        ? `<img class="home-media-photo" src="${esc(homeMedia.photo)}" alt="Siarah campaign photography" loading="lazy" decoding="async">`
+        : `<img class="home-media-reference" src="${photoReference.main}" alt="${esc(photoReference.name)} corset illustration, temporary photography visual" loading="lazy" decoding="async">`;
+      return `<div class="page"><section class="hero" aria-labelledby="home-hero-title">
+    <div class="himg">
+      <img src="${hero.main}" alt="${esc(hero.name)} corset illustration, shown from front and back" loading="eager" decoding="async">
+    </div>
+    <div class="hero-copy">
+      <h1 id="home-hero-title">Corsets made to your measure.</h1>
+      <div class="hero-description">
+        <p class="lede">Choose a fabric, then a design, a print and your size. Every piece is cut and stitched after you order.</p>
+        <a class="btn" href="#/customize/${hero.id}">Choose a fabric</a>
+      </div>
+    </div>
+  </section>
+  <div class="w home-media-grid reveal">
+    <section class="home-media-panel home-video-panel" aria-label="Campaign video panel">
+      <div class="home-media-frame">${videoPanel}</div>
+    </section>
+    <section class="home-media-panel home-photo-panel" aria-label="Campaign photo panel">
+      <div class="home-media-frame">${photoPanel}</div>
+      <div class="home-media-action"><a class="btn btn-sm" href="#/collection">Choose your design</a></div>
+    </section>
+  </div>
+  <section class="w rail-sec reveal" aria-labelledby="look-h">
+    <div class="rail-head"><div><h2 id="look-h">The collection</h2><p>Scroll the lookbook. Stills only until films are supplied.</p></div>
+      <div class="rail-nav">
+        <button type="button" id="rail-prev" aria-label="Previous looks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+        <button type="button" id="rail-next" aria-label="Next looks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+      </div>
+    </div>
+    <div class="rail-wrap">
+      <div class="rail" id="rail" tabindex="0" role="region" aria-label="Lookbook. Scroll or use arrow keys.">${D.designs.map(d => `<article class="rcard"><a class="rcard-link" href="#/customize/${encodeURIComponent(d.id)}" aria-label="Customise design No. ${esc(d.id)}: ${esc(d.name)}"><div class="ph"><img src="${d.main}" alt="${esc(d.name)}" loading="lazy"></div><h3>No. ${esc(d.id)}</h3></a>${wishlistButton(d)}</article>`).join('')}</div>
+    </div>
+    <div class="dots" id="rdots" role="tablist" aria-label="Lookbook position"></div>
+    <div class="rail-foot"><a class="btn ghost btn-sm" href="#/collection">Browse all</a></div>
+  </section></div>`;
+    }
+    function collectionPage() {
+      return `<div class="page w"><div class="crumb"><a href="#/">Home</a> / Collection</div><h2 style="font-size:2.4rem;margin-bottom:8px">Choose a design</h2><p class="subh">Each silhouette is made to order. Choose a design first, then select fabric, print and fit.</p><p class="collection-count">${D.designs.length} designs · starting price shown by available fabric</p>${designGrid(null, true)}</div>`;
+    }
+    function wishlistPage() {
+      return `<div class="page w"><div class="crumb"><a href="#/">Home</a> / Wishlist</div><h1 id="wishlist-title" tabindex="-1" style="font-weight:300;font-size:clamp(2.4rem,5.4vw,4.4rem)">Your Wishlist</h1><p class="subh">Your favourite designs, saved for later.</p><div id="wishlist-results">${wishlistResults()}</div></div>`;
+    }
+    function fabricPage(id) {
+      const f = fab(id);
+      if (!f) return notFound();
+      if (f.soon) return `<div class="page w empty"><h2>${f.n}</h2><p>This fabric is not available yet. Satin and lace will open when their designs and prints are supplied.</p><a class="btn" href="#/collection">View the collection</a></div>`;
+      return `<div class="page w"><div class="crumb"><a href="#/collection">Collection</a> / ${f.n}</div><h2 style="font-size:2.4rem;margin-bottom:8px">${f.n}</h2><p class="subh">${fmt(price(id))} · ${D.designs.length} designs</p>${designGrid(id, true)}</div>`;
+    }
+    function configReady() { return isLive(P.f) && !!prt(P.p) && (P.m ? !!cleanMeasurements(P.mm) : isSize(P.s)); }
+    function fitText() {
+      if (!P.m) return P.s ? `Standard size ${P.s}` : 'Standard size not selected';
+      const m = cleanMeasurements(P.mm);
+      return m ? `Custom: bust ${m.bust} cm, waist ${m.waist} cm, hips ${m.hips} cm` : 'Custom measurements not complete';
+    }
+    function selectionSummary() {
+      const d = des(P.d), f = fab(P.f), p = prt(P.p);
+      const missing = v => v ? esc(v) : '<span class="pending">Not selected</span>';
+      return `<section class="cfg-summary" id="cfg-summary" aria-live="polite"><h2>Selected options</h2><dl><dt>Design</dt><dd>${d ? `No. ${d.id} ${esc(d.name)}` : '<span class="pending">Not selected</span>'}</dd><dt>Fabric</dt><dd>${missing(f && f.n)}</dd><dt>Print</dt><dd>${missing(p && p.name)}</dd><dt>Fit</dt><dd>${P.m ? esc(fitText()) : missing(P.s && `Standard size ${P.s}`)}</dd></dl></section>`;
+    }
+    function isStepDone(n) { return n === 1 || (n === 2 && isLive(P.f)) || (n === 3 && isLive(P.f) && !!prt(P.p)) || (n >= 4 && configReady()); }
+    function refreshCfgUi(message, kind) {
+      const summary = $('#cfg-summary'); if (summary) summary.outerHTML = selectionSummary();
+      const rev = $('#rev'); if (rev) rev.outerHTML = reviewText();
+      const add = $('[data-add]'); if (add) add.disabled = !configReady();
+      const alert = $('#cfg-alert');
+      if (alert && message !== undefined) { alert.textContent = message; alert.className = 'cfg-alert' + (kind ? ' ' + kind : ''); }
+    }
+    function reviewText() {
+      const d = des(P.d), f = P.f && fab(P.f), p = P.p && prt(P.p);
+      if (!d) return '';
+      const ready = configReady();
+      return `<div class="review" id="rev"><b>Review your piece</b><p style="margin-top:8px">Design No. ${d.id} ${d.name}<br>${f ? f.n : 'Fabric not chosen'} · ${p ? p.name : 'Print not chosen'}<br>${fitText()}<br>${isLive(P.f) ? fmt(price(P.f)) : 'Price after fabric'}</p>${ready ? '<p style="color:var(--color-success);margin-top:8px">Your configuration is ready to add to bag.</p>' : '<p style="color:var(--mu);margin-top:8px">Choose an available fabric, a print and a fit before adding this piece.</p>'}</div>`;
+    }
+    function showStep(n, message = '', kind = '') {
+      P.step = n; persistCfg();
+      document.querySelectorAll('[data-panel]').forEach(el => el.classList.toggle('on', +el.dataset.panel === n));
+      document.querySelectorAll('[role="tab"][data-goto]').forEach(el => {
+        el.classList.toggle('on', +el.dataset.goto === n);
+        el.classList.toggle('done', isStepDone(+el.dataset.goto));
+        el.setAttribute('aria-selected', +el.dataset.goto === n);
+      });
+      document.querySelectorAll('[role="tabpanel"]').forEach(el => el.setAttribute('aria-hidden', el.dataset.panel != n));
+      const pr = $('#price'); if (pr) pr.textContent = P.f ? fmt(price(P.f)) : 'From ' + fmt(fromPrice);
+      refreshCfgUi(message, kind);
+    }
+    function pdp(did, prefab) {
+      const d = des(did);
+      if (!d) return notFound();
+      if (prefab && !isLive(prefab)) return `<div class="page w empty"><h2>This fabric is not available</h2><p>Satin and lace cannot be ordered yet.</p><a class="btn" href="#/customize/${d.id}">Continue with ${d.name}</a></div>`;
+      loadCfg(did, prefab);
+      const f = P.f && fab(P.f);
+      const mm = P.mm || {};
+      const step = P.step || 2;
+      return `<div class="page w"><div class="crumb"><a href="#/collection">Collection</a> / No. ${d.id}</div>
+  <div class="pdp"><div><div class="ph"><img src="${d.main}" alt="${d.name}"></div><div class="det"><img src="${d.det}" alt="Details of ${d.name}"></div></div>
+  <div>
+    <h1>${d.name}</h1>
+    <p style="color:var(--mu)">${d.tagline}</p>
+    <p style="font:500 1.3rem var(--s);margin-top:8px" id="price">${P.f ? fmt(price(P.f)) : 'From ' + fmt(fromPrice)}</p>
+    ${selectionSummary()}
+    <p id="cfg-alert" class="cfg-alert" role="status" aria-live="polite"></p>
+    <div class="steps" role="tablist" aria-label="Customise">
+      ${[['1', 'Design'], ['2', 'Fabric'], ['3', 'Print'], ['4', 'Size'], ['5', 'Review']].map(([n, l]) => `<button type="button" role="tab" id="step-${n}" data-goto="${n}" class="${+n === step ? 'on' : ''} ${isStepDone(+n) ? 'done' : ''}" aria-selected="${+n === step}" aria-controls="panel-${n}">${n} ${l}</button>`).join('')}
+    </div>
+    <div class="panel ${step === 1 ? 'on' : ''}" data-panel="1" id="panel-1" role="tabpanel" aria-labelledby="step-1">
+      <p class="step-kicker">Step 1 of 5</p><h2 class="panel-title">Design</h2><p class="cfg-note">You are customising No. ${d.id} ${d.name}.</p>
+      <a class="btn ghost btn-sm" href="#/collection">Change design</a>
+      <div class="button-row"><button class="btn" data-goto="2">Continue to fabric</button></div>
+    </div>
+    <div class="panel ${step === 2 ? 'on' : ''}" data-panel="2" id="panel-2" role="tabpanel" aria-labelledby="step-2">
+      <p class="step-kicker">Step 2 of 5</p><h2 class="panel-title">Choose fabric</h2><p class="panel-copy">Choose one available fabric. Satin and lace are not available yet.</p>
+      <div class="ch">${F.map(x => `<button type="button" class="chip ${x.soon ? 'soon' : ''} ${P.f === x.id ? 'on' : ''}" data-fab="${x.id}" aria-pressed="${P.f === x.id}" ${x.soon ? 'disabled aria-disabled="true" title="Coming soon"' : ''}><span class="chip-swatch" style="background:${x.c}"></span><span>${x.n}</span>${x.soon ? '<span class="chip-soon">Soon</span>' : ''}</button>`).join('')}</div>
+      <div class="button-row"><button class="btn" data-goto="3">Continue to print</button></div>
+    </div>
+    <div class="panel ${step === 3 ? 'on' : ''}" data-panel="3" id="panel-3" role="tabpanel" aria-labelledby="step-3">
+      <p class="step-kicker">Step 3 of 5</p><h2 class="panel-title">Choose a print</h2><p class="panel-copy">Select one of the supplied prints for your fabric.</p><p class="lbl">Selected print: <b id="prn">${P.p && prt(P.p) ? prt(P.p).name + ' · ' + prt(P.p).tagline : 'Not selected'}</b></p>
+      <div class="pg">${D.prints.map(p => `<button class="pr ${P.p === p.id ? 'on' : ''}" data-pr="${p.id}" title="${p.name}" aria-label="Select print ${p.name}" aria-pressed="${P.p === p.id}" type="button"><img src="${p.img}" alt="${p.name}"></button>`).join('')}</div>
+      <div class="button-row"><button class="btn" data-goto="4">Continue to size</button></div>
+    </div>
+    <div class="panel ${step === 4 ? 'on' : ''}" data-panel="4" id="panel-4" role="tabpanel" aria-labelledby="step-4">
+      <p class="step-kicker">Step 4 of 5</p><h2 class="panel-title">Choose your fit</h2><p class="panel-copy" id="size-selection">${P.m ? fitText() : (P.s ? `Selected: standard size ${P.s}` : 'Select a standard size or enter custom measurements.')}</p>
+      <div class="ch">${SIZES.map(s => `<button type="button" class="chip ${!P.m && P.s === s ? 'on' : ''}" data-sz="${s}" aria-pressed="${!P.m && P.s === s}">${s}</button>`).join('')}</div>
+      <button class="lnk" data-m type="button">${P.m ? 'Use a standard size' : 'Enter my measurements instead'}</button>
+      <div class="mz ${P.m ? 'show' : ''}" id="mz">${fld('bust', 'Bust measurement', 'number', mm.bust)}${fld('waist', 'Waist measurement', 'number', mm.waist)}${fld('hips', 'Hip measurement', 'number', mm.hips)}</div>
+      <p class="cfg-note" style="margin-top:10px">Enter each measurement in centimetres. The current preview validation range is 50–160 cm; Siarah must confirm these limits before launch. <a class="plain-link" href="#/page/measure">View the measurement guide</a>.</p>
+      <div class="button-row"><button class="btn" data-goto="5">Review your piece</button></div>
+    </div>
+    <div class="panel ${step === 5 ? 'on' : ''}" data-panel="5" id="panel-5" role="tabpanel" aria-labelledby="step-5">
+      <p class="step-kicker">Step 5 of 5</p><h2 class="panel-title">Review and add</h2>
+      ${reviewText()}
+      <button class="btn" data-add type="button" ${configReady() ? '' : 'disabled'}>Add to bag</button>
+    </div>
+  </div></div></div>`;
+    }
+    function checkout() { const t = cart.reduce((s, i) => s + i.price, 0); return `<div class="page w"><div class="crumb"><a href="#/collection">Keep browsing</a> / Checkout</div><div class="co"><div id="cf"><h2 style="margin-bottom:8px">Checkout preview</h2><p class="notice" style="margin:0 0 18px">Payments and order submission are not connected. Do not enter real personal or payment information.</p><div class="r2">${fld('name', 'Full name')}${fld('phone', 'Phone (WhatsApp)', 'tel')}</div><div style="margin-bottom:12px">${fld('email', 'Email', 'email')}</div><div style="margin-bottom:12px">${fld('addr', 'Address')}</div><div class="r2">${fld('city', 'City')}${fld('state', 'State')}</div>${fld('pin', 'PIN code')}<div style="margin-top:22px"><button class="btn" data-pay>View payment preview</button></div><p style="color:var(--mu);font-size:12px;margin-top:14px">The fields stay in this page only. This preview does not send them to a server or save them.</p></div><div><h2 style="margin-bottom:8px">Order summary</h2>${$('#bl').innerHTML}<p style="padding-top:14px">Total <b>${fmt(t)}</b></p><p style="color:var(--mu);font-size:13px">Shipping is charged separately.</p></div></div></div>` }
+    function emptyCheckout() { return `<div class="page w empty"><p class="info-eyebrow">Checkout</p><h2>Your bag is empty.</h2><p>Choose a design and configure a piece before starting checkout.</p><a class="btn" href="#/collection">Explore the collection</a></div>` }
+    function aboutPage() { return `<div class="page w info-page"><div class="crumb"><a href="#/">Home</a> / About us</div><p class="info-eyebrow">About Siarah</p><h1>Made to order, one piece at a time.</h1><p class="info-intro">Siarah is a made-to-order corset house. Each piece begins with a design, then takes shape through your chosen fabric, print and fit.</p><div class="info-grid"><section class="info-section"><h2>Our point of view</h2><p>Indian heritage. Reimagined for the world. Traditional craft, clean modern cuts, made one piece at a time.</p></section><section class="info-section"><h2>Designed around choice</h2><p>Explore twenty-six corset silhouettes, then choose from the available fabrics and prints before selecting a standard size or entering your measurements.</p></section><section class="info-section"><h2>Made after you choose</h2><p>Each piece is cut and stitched after order, rather than selected from a ready-made catalogue.</p></section><section class="info-section"><h2>Customisation, clearly guided</h2><p>The customisation flow keeps your design, fabric, print and fit choices visible before you add a piece to bag.</p></section></div><div class="notice"><strong>Collection note:</strong> Satin and lace are listed as coming soon until their designs and prints are supplied.</div><div class="info-actions"><a class="btn" href="#/collection">Explore the collection</a></div></div>` }
+    function contactPage() { return `<div class="page w info-page"><div class="crumb"><a href="#/">Home</a> / Contact</div><p class="info-eyebrow">Customer care</p><h1>How can we help?</h1><p class="info-intro">The right contact details have not yet been supplied for this client preview. This page is a clear handover point, not a message form.</p><div class="info-grid"><section class="info-card"><h2>Customer enquiries</h2><p>For collection, fabric and print questions, Siarah should provide a customer support contact before launch.</p></section><section class="info-card"><h2>Order-related questions</h2><p>Customers will need an approved contact route for order updates, delivery questions and changes after purchase.</p></section><section class="info-card"><h2>Custom measurements</h2><p>The measurement guide explains bust, waist and hip inputs. A named support route is still needed for fit-related questions.</p></section><section class="info-card"><h2>Contact details</h2><p>Support email, phone, WhatsApp number, address and service hours have not been supplied. No message is sent from this preview.</p></section></div><div class="notice"><strong>Before launch:</strong> add approved customer-support contact details and confirm who handles order and measurement enquiries.</div><div class="info-actions"><a class="btn ghost" href="https://www.instagram.com/siarah_official/" target="_blank" rel="noopener">Visit Siarah on Instagram</a><a class="btn" href="#/collection">Browse the collection</a></div></div>` }
+    function shippingPage() { return `<div class="page w info-page"><div class="crumb"><a href="#/">Home</a> / Shipping</div><p class="info-eyebrow">Shipping information</p><h1>Shipping details are being confirmed.</h1><p class="info-intro">Siarah pieces are made to order. The client preview confirms only the information below; final shipping terms require owner approval before publication.</p><div class="info-grid"><section class="info-section"><h2>Order processing</h2><p>Each piece is cut and stitched after you order. The final processing workflow has not been supplied.</p></section><section class="info-section"><h2>Dispatch estimate</h2><p>The current preview refers to dispatch in 2 to 3 weeks. Siarah must confirm this estimate before launch.</p></section><section class="info-section"><h2>Delivery information</h2><p>Delivery locations, carriers, delivery windows and geographic coverage have not been supplied.</p></section><section class="info-section"><h2>Shipping charges</h2><p>Shipping is charged separately. The amount and rule are still to be confirmed.</p></section><section class="info-section wide"><h2>Tracking</h2><p>Tracking availability and the process for sharing tracking details have not been supplied.</p></section></div><div class="notice"><strong>Owner review required:</strong> approve the dispatch estimate, shipping charge rules, delivery coverage, carriers and tracking process before these details are presented as final terms.</div><div class="info-actions"><a class="btn" href="#/collection">Browse the collection</a></div></div>` }
+    function returnsPage() { return `<div class="page w info-page"><div class="crumb"><a href="#/">Home</a> / Returns and cancellations</div><p class="info-eyebrow">Policy review</p><h1>Returns and cancellations need owner approval.</h1><p class="info-intro">A final policy has not been supplied for this made-to-order collection. The sections below identify the decisions Siarah needs to approve; they are not published customer terms.</p><div class="info-grid"><section class="info-card"><h2>Cancellations</h2><p>Confirm whether cancellations are accepted, the permitted request window and the process for handling an approved request.</p></section><section class="info-card"><h2>Returns and exchanges</h2><p>Confirm eligibility, exclusions, exchange options, timelines and any required condition for a returned piece.</p></section><section class="info-card"><h2>Damaged or incorrect items</h2><p>Confirm the evidence required, customer contact route, review process and replacement or refund outcome.</p></section><section class="info-card"><h2>Size and measurements</h2><p>Confirm responsibility for customer-entered measurements, any fit review process and any alteration or remake terms.</p></section></div><div class="notice"><strong>Customer assistance:</strong> an approved support contact must be supplied before this page can direct customers to request help.</div><div class="info-actions"><a class="btn ghost" href="#/page/contact">View contact information</a><a class="btn" href="#/page/measure">Read the measurement guide</a></div></div>` }
+    function measurementPage() { return `<div class="page w info-page"><div class="crumb"><a href="#/collection">Collection</a> / Measurement guide</div><p class="info-eyebrow">Measurement guide</p><h1>Take your measurements in centimetres.</h1><p class="info-intro">When choosing custom measurements, enter bust, waist and hip measurements in cm. Use a flexible measuring tape and keep it comfortably close to the body.</p><div class="measure-grid"><section class="measure-card"><span class="measure-num">01 · Bust</span><h2>Measure around the fullest part.</h2><p>Wrap the tape around the fullest part of your bust. Keep the tape level as you record the centimetre measurement.</p></section><section class="measure-card"><span class="measure-num">02 · Waist</span><h2>Measure your natural waist.</h2><p>Measure around your natural waist, keeping the tape level and comfortably close as you record the centimetre measurement.</p></section><section class="measure-card"><span class="measure-num">03 · Hips</span><h2>Measure around the fullest part.</h2><p>Wrap the tape around the fullest part of your hips. Keep the tape level as you record the centimetre measurement.</p></section></div><div class="notice"><strong>Important:</strong> this guide does not establish Siarah’s official tailoring tolerances, fit guarantees or alteration policy. The current preview validation range of 50–160 cm also requires brand confirmation.</div><div class="info-actions"><a class="btn" href="#/collection">Choose a design</a></div></div>` }
+    function salePage() { return `<div class="page w info-page"><div class="crumb"><a href="#/">Home</a> / Sale</div><p class="info-eyebrow">Sale</p><h1>No sale pieces are currently available.</h1><p class="info-intro">Siarah garments are made to order and the collection currently shows the approved fabric-based prices. No sale products or discounts have been supplied for this preview.</p><div class="notice"><strong>Collection pricing:</strong> sale pricing, markdowns and promotional terms will appear only when approved product data is available.</div><div class="info-actions"><a class="btn" href="#/collection">Browse the collection</a></div></div>` }
+    function accountPage() { return `<div class="page w info-page"><div class="crumb"><a href="#/">Home</a> / Account</div><p class="info-eyebrow">Client preview</p><h1>Account features are not available yet.</h1><p class="info-intro">This preview does not include customer login, account registration or order history. The Account link is intentionally hidden from the presentation navigation so customers are not led to expect a service that is not available.</p><div class="notice"><strong>Owner decision required:</strong> confirm whether customer accounts and order history are part of the future site before adding account navigation.</div><div class="info-actions"><a class="btn" href="#/collection">Browse the collection</a></div></div>` }
+    function notFound() { return `<div class="page w empty"><h2>Page not found</h2><p>That link does not match a design, fabric or page on this preview.</p><a class="btn" href="#/">Back to home</a></div>` }
+    function measMsg(k, v) {
+      if (v === '' || v == null) return 'This field is required.';
+      const n = Number(v);
+      if (!Number.isFinite(n)) return 'Please enter a valid number.';
+      const [lo, hi] = MEAS[k] || [50, 160];
+      if (n < lo) return `Minimum ${lo} cm required.`;
+      if (n > hi) return `Maximum ${hi} cm allowed.`;
+      return '';
+    }
+    function paintMeasurementError(label, message) {
+      const input = label.querySelector('input');
+      label.classList.toggle('bad', !!message);
+      input.setAttribute('aria-invalid', message ? 'true' : 'false');
+      label.querySelector('.er').textContent = message;
+    }
+    function measurementMessage(input) {
+      return input.validity && input.validity.badInput ? 'Please enter a valid number.' : measMsg(input.name, input.value.trim());
+    }
+    function validateMeasurementInput(input) {
+      const label = input.closest('[data-k]');
+      if (!label) return false;
+      const message = measurementMessage(input);
+      paintMeasurementError(label, message);
+      return !message;
+    }
+    function measOk(paintErr) {
+      const root = $('#mz'); if (!root) return false;
+      let ok = true;
+      ['bust', 'waist', 'hips'].forEach(k => {
+        const l = root.querySelector(`[data-k="${k}"]`); if (!l) { ok = false; return }
+        const input = l.querySelector('input'), v = input.value.trim(), m = measurementMessage(input);
+        if (paintErr) paintMeasurementError(l, m);
+        if (m) { ok = false; } else { P.mm[k] = Number(v); }
+      });
+      if (ok) persistCfg();
+      return ok;
+    }
+    function check(keys, root) {
+      let ok = true; keys.forEach(k => {
+        const l = root.querySelector(`[data-k="${k}"]`), v = l.querySelector('input').value.trim(); let m = '';
+        if (!v) m = 'Required.'; else if (k === 'email' && !/^\S+@\S+\.\S+$/.test(v)) m = 'Enter a valid email.'; else if (k === 'phone' && v.replace(/\D/g, '').length < 10) m = 'Enter 10 digits.'; else if (k === 'pin' && !/^\d{6}$/.test(v)) m = 'Enter 6 digits.';
+        l.classList.toggle('bad', !!m); l.querySelector('.er').textContent = m; if (m) ok = false
+      }); return ok
+    }
+    function closeMenu() {
+      const m = $('#menu'), b = $('#hm');
+      if (m.hidden || !m.classList.contains('open')) return;
+      const panel = m.querySelector('.menu-panel');
+      clearTimeout(menuCloseTimer);
+      if (menuTransitionEnd) panel.removeEventListener('transitionend', menuTransitionEnd);
+      m.classList.remove('open'); m.classList.add('closing');
+      m.setAttribute('aria-hidden', 'true'); m.inert = true;
+      document.body.classList.remove('nav-open');
+      b.setAttribute('aria-expanded', 'false'); b.setAttribute('aria-label', 'Open menu');
+      if (m.contains(document.activeElement)) b.focus();
+      const finish = () => {
+        if (!m.classList.contains('closing')) return;
+        m.classList.remove('closing'); m.hidden = true; m.inert = false;
+        panel.removeEventListener('transitionend', menuTransitionEnd);
+        menuTransitionEnd = null;
+      };
+      menuTransitionEnd = e => { if (e.target === panel && e.propertyName === 'transform') finish(); };
+      panel.addEventListener('transitionend', menuTransitionEnd);
+      menuCloseTimer = setTimeout(finish, 600);
+    }
+    function openMenu() {
+      const m = $('#menu'), b = $('#hm');
+      const panel = m.querySelector('.menu-panel');
+      clearTimeout(menuCloseTimer);
+      if (menuTransitionEnd) panel.removeEventListener('transitionend', menuTransitionEnd);
+      menuTransitionEnd = null;
+      m.hidden = false; m.inert = false; m.removeAttribute('aria-hidden'); m.classList.remove('closing');
+      panel.getBoundingClientRect();
+      m.classList.add('open'); document.body.classList.add('nav-open');
+      b.setAttribute('aria-expanded', 'true'); b.setAttribute('aria-label', 'Close menu');
+      const first = m.querySelector('.menu-panel nav a'); first && first.focus();
+    }
+    function bindRail() {
+      const rail = $('#rail'); if (!rail) return;
+      const cards = [...rail.querySelectorAll('.rcard')];
+      const dots = $('#rdots');
+      const gap = 16;
+      const cardW = () => (cards[0] ? cards[0].getBoundingClientRect().width : 220) + gap;
+      const page = () => Math.max(1, Math.round(rail.clientWidth / cardW()));
+      const maxI = () => Math.max(0, cards.length - 1);
+      const idx = () => {
+        const w = cardW();
+        return Math.max(0, Math.min(maxI(), Math.round(rail.scrollLeft / w)));
+      };
+      const vis = () => Math.max(1, Math.round(rail.clientWidth / cardW()) || 1);
+      const pageCount = () => Math.max(1, Math.ceil(cards.length / vis()));
+      const curPage = () => Math.max(0, Math.min(pageCount() - 1, Math.round(rail.scrollLeft / (cardW() * vis()))));
+      const paintDots = () => {
+        const n = pageCount(), cur = curPage();
+        if (dots.childElementCount !== n) {
+          dots.innerHTML = Array.from({ length: n }, (_, i) => `<button type="button" role="tab" aria-label="Lookbook page ${i + 1}" data-page="${i}"></button>`).join('');
+        }
+        dots.querySelectorAll('button').forEach((b, k) => { if (k === cur) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
+        const prev = $('#rail-prev'), next = $('#rail-next');
+        if (prev) prev.disabled = rail.scrollLeft <= 8;
+        if (next) next.disabled = rail.scrollLeft + rail.clientWidth >= rail.scrollWidth - 8;
+      };
+      const scrollRail = direction => {
+        const first = rail.querySelector('.rcard');
+        const width = (first ? first.getBoundingClientRect().width : 220) + 16;
+        const itemsVisible = Math.max(1, Math.round(rail.clientWidth / width));
+        rail.scrollBy({ left: direction * width * itemsVisible, behavior: scrollBehavior() });
+      };
+      const prev = $('#rail-prev'), next = $('#rail-next');
+      if (prev) prev.addEventListener('click', () => scrollRail(-1));
+      if (next) next.addEventListener('click', () => scrollRail(1));
+      rail.addEventListener('scroll', () => requestAnimationFrame(paintDots), { passive: true });
+      rail.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight') { e.preventDefault(); scrollRail(1); }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); scrollRail(-1); }
+        if (e.key === 'Home') { e.preventDefault(); rail.scrollTo({ left: 0, behavior: scrollBehavior() }) }
+        if (e.key === 'End') { e.preventDefault(); rail.scrollTo({ left: rail.scrollWidth, behavior: scrollBehavior() }) }
+      });
+      paintDots();
+    }
+    function updateShowcaseNav() {
+      const strip = $('#thumb-strip'); if (!strip) return;
+      const prev = $('#th-prev'), next = $('#th-next');
+      const canChange = strip.querySelectorAll('.hero-thumb').length > 1;
+      if (prev) prev.disabled = !canChange;
+      if (next) next.disabled = !canChange;
+    }
+    function bindShowcase() {
+      const strip = $('#thumb-strip'); if (!strip) return;
+      const prev = $('#th-prev'), next = $('#th-next');
+      const moveShowcase = direction => {
+        const thumbs = [...strip.querySelectorAll('.hero-thumb')];
+        if (thumbs.length < 2) return;
+        const current = thumbs.findIndex(button => button.getAttribute('aria-pressed') === 'true');
+        const index = current < 0 ? 0 : (current + direction + thumbs.length) % thumbs.length;
+        const target = thumbs[index];
+        target.click();
+
+        const stripRect = strip.getBoundingClientRect();
+        const targetRect = target.getBoundingClientRect();
+        let left = strip.scrollLeft;
+        if (targetRect.left < stripRect.left + 2) left -= stripRect.left + 2 - targetRect.left;
+        else if (targetRect.right > stripRect.right - 2) left += targetRect.right - stripRect.right + 2;
+        strip.scrollTo({ left, behavior: scrollBehavior() });
+      };
+      if (prev) prev.addEventListener('click', () => moveShowcase(-1));
+      if (next) next.addEventListener('click', () => moveShowcase(1));
+      updateShowcaseNav();
+    }
+    function bindHomeVideo() {
+      if (homeMotionQuery && homeMotionHandler) {
+        if (homeMotionQuery.removeEventListener) homeMotionQuery.removeEventListener('change', homeMotionHandler);
+        else homeMotionQuery.removeListener(homeMotionHandler);
+      }
+      homeMotionQuery = homeMotionHandler = null;
+      const video = $('#home-campaign-video'); if (!video) return;
+      const motion = matchMedia('(prefers-reduced-motion: reduce)');
+      const updatePlayback = () => {
+        if (motion.matches) { video.pause(); video.removeAttribute('autoplay'); return; }
+        video.setAttribute('autoplay', '');
+        const playback = video.play(); if (playback && playback.catch) playback.catch(() => {});
+      };
+      updatePlayback();
+      homeMotionQuery = motion;
+      homeMotionHandler = updatePlayback;
+      if (motion.addEventListener) motion.addEventListener('change', updatePlayback);
+      else motion.addListener(updatePlayback);
+    }
+    window.addEventListener('resize', updateShowcaseNav, { passive: true });
+    function rememberMeas() {
+      const root = $('#mz'); if (!root || !P.mm) return;
+      root.querySelectorAll('input').forEach(i => { P.mm[i.name] = i.value.trim() });
+      persistCfg();
+    }
+    document.addEventListener('click', async e => {
+      const a = e.target.closest('a');
+      if (a && a.closest('#menu')) closeMenu();
+      if (e.target.closest('[data-menu-close]')) { closeMenu(); return }
+      if (e.target.id === 'modal') { closePaymentPreview(); return }
+      const t = e.target.closest('button'); if (!t) return; const g = a => t.hasAttribute(a);
+      if (t.id === 'hm') { ($('#menu').classList.contains('open') ? closeMenu : openMenu)(); return }
+      if (g('data-wishlist-open')) { location.hash = '#/wishlist'; return }
+      if (g('data-wish-toggle')) {
+        e.preventDefault();
+        e.stopPropagation();
+        const onWishlistPage = location.hash === '#/wishlist';
+        const currentButtons = onWishlistPage ? [...document.querySelectorAll('#wishlist-results [data-wish-toggle]')] : [];
+        const oldIndex = currentButtons.indexOf(t);
+        toggleWishlist(t.dataset.wishToggle);
+        if (onWishlistPage) {
+          const nextButtons = [...document.querySelectorAll('#wishlist-results [data-wish-toggle]')];
+          const focusTarget = nextButtons[Math.min(Math.max(oldIndex, 0), nextButtons.length - 1)] || $('#wishlist-title');
+          if (focusTarget) focusTarget.focus();
+        }
+        return;
+      }
+      // Thumbnail strip: select image
+      if (t.classList.contains('hero-thumb')) {
+        const mainImg = $('#showcase-main-img'), designImg = $('#hero-design-img'), detailImg = $('#hero-detail-img');
+        if (!mainImg || !designImg || !detailImg) return;
+        clearTimeout(showcaseSwapTimer);
+        [mainImg, designImg, detailImg].forEach(img => img.classList.add('is-changing'));
+        showcaseSwapTimer = setTimeout(() => {
+          const main = t.dataset.main || mainImg.src;
+          const detail = t.dataset.detail || main;
+          const alt = t.dataset.alt || mainImg.alt;
+          mainImg.src = main;
+          mainImg.alt = alt;
+          designImg.src = main;
+          designImg.alt = `Design No. ${t.dataset.designId}: ${alt}`;
+          detailImg.src = detail;
+          $('#hero-design-id').textContent = `Design No. ${t.dataset.designId}`;
+          $('#hero-detail-label').textContent = t.dataset.tagline || '';
+          $('#hero-customize-link').href = `#/customize/${encodeURIComponent(t.dataset.designId)}`;
+          requestAnimationFrame(() => [mainImg, designImg, detailImg].forEach(img => img.classList.remove('is-changing')));
+        }, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : showcaseFadeMs + 20);
+        document.querySelectorAll('.hero-thumb').forEach(b => b.setAttribute('aria-pressed', b === t ? 'true' : 'false'));
+        return;
+      }
+      if (g('data-page')) { const rail = $('#rail'); if (!rail) return; const first = rail.querySelector('.rcard'); const w = (first ? first.getBoundingClientRect().width : 220) + 16; const vis = Math.max(1, Math.round(rail.clientWidth / w)); rail.scrollTo({ left: +t.dataset.page * w * vis, behavior: scrollBehavior() }); return }
+      if (g('data-goto')) {
+        const n = +t.dataset.goto;
+        if (n >= 3 && !isLive(P.f)) { showStep(2, 'Choose an available fabric to continue.', 'error'); return }
+        if (n >= 4 && !prt(P.p)) { showStep(3, 'Choose a print to continue.', 'error'); return }
+        if (n >= 5 && P.m && !measOk(true)) { showStep(4, 'Enter valid bust, waist and hip measurements to continue.', 'error'); return }
+        if (n >= 5 && !P.m && !isSize(P.s)) { showStep(4, 'Choose a standard size or enter custom measurements to continue.', 'error'); return }
+        rememberMeas(); showStep(n); return;
+      }
+      if (g('data-bag')) {
+        const b = $('#bag'), bb = $('#bag-back');
+        const open = b.classList.toggle('open');
+        if (bb) bb.classList.toggle('open', open);
+        return;
+      }
+      if (g('data-rm')) { cart.splice(+t.dataset.rm, 1); save(); if (location.hash === '#/checkout') route(); return }
+      if (g('data-fab')) {
+        if (!isLive(t.dataset.fab)) return;
+        P.f = t.dataset.fab; persistCfg();
+        document.querySelectorAll('[data-fab]').forEach(b => { b.classList.toggle('on', b === t); b.setAttribute('aria-pressed', b === t) });
+        const pr = $('#price'); if (pr) pr.textContent = fmt(price(P.f));
+        refreshCfgUi(`${fab(P.f).n} selected. Continue to print.`, 'success');
+        return;
+      }
+      if (g('data-pr')) { P.p = t.dataset.pr; persistCfg(); document.querySelectorAll('.pr').forEach(b => { b.classList.toggle('on', b === t); b.setAttribute('aria-pressed', b === t) }); $('#prn').textContent = prt(P.p).name + ' · ' + prt(P.p).tagline; refreshCfgUi(`${prt(P.p).name} selected. Continue to fit.`, 'success'); return }
+      if (g('data-sz')) { P.s = t.dataset.sz; P.m = false; persistCfg(); const mz = $('#mz'); mz && mz.classList.remove('show'); document.querySelectorAll('[data-sz]').forEach(b => { b.classList.toggle('on', b === t); b.setAttribute('aria-pressed', b === t) }); const ss = $('#size-selection'); if (ss) ss.textContent = `Selected: standard size ${P.s}`; refreshCfgUi(`Standard size ${P.s} selected.`, 'success'); return }
+      if (g('data-m')) { P.m = !P.m; persistCfg(); const mz = $('#mz'); mz && mz.classList.toggle('show', P.m); t.textContent = P.m ? 'Use a standard size' : 'Enter my measurements instead'; document.querySelectorAll('[data-sz]').forEach(b => { const on = !P.m && b.dataset.sz === P.s; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on) }); const ss = $('#size-selection'); if (ss) ss.textContent = P.m ? 'Enter bust, waist and hip measurements in centimetres.' : (P.s ? `Selected: standard size ${P.s}` : 'Select a standard size.'); refreshCfgUi(P.m ? 'Custom measurements selected. Complete all three fields.' : 'Standard size selected.', 'success'); return }
+      if (g('data-add')) {
+        if (!isLive(P.f)) { showStep(2, 'Choose an available fabric before adding this piece.', 'error'); return }
+        if (!prt(P.p)) { showStep(3, 'Choose a print before adding this piece.', 'error'); return }
+        if (P.m && !measOk(true)) { showStep(4, 'Enter valid bust, waist and hip measurements before adding this piece.', 'error'); return }
+        if (!P.m && !isSize(P.s)) { showStep(4, 'Choose a standard size or enter custom measurements before adding this piece.', 'error'); return }
+        const m = P.m ? cleanMeasurements(P.mm) : null;
+        if (P.m && !m) { showStep(4, 'Enter valid bust, waist and hip measurements before adding this piece.', 'error'); return }
+        cart.push({ f: P.f, d: P.d, p: P.p, s: P.m ? null : P.s, m, price: price(P.f) });
+        save(); refreshCfgUi('Added to your bag.', 'success');
+        const addLabel = t.textContent; t.textContent = 'Added ✓'; t.disabled = true;
+        setTimeout(() => { if (t.isConnected) { t.textContent = addLabel; t.disabled = !configReady(); } }, 1600);
+        $('#bag').classList.add('open'); const bb = $('#bag-back'); if (bb) bb.classList.add('open'); return
+      }
+      if (g('data-pay')) {
+        if (!check(['name', 'phone', 'email', 'addr', 'city', 'state', 'pin'], $('#cf'))) return;
+        const modal = $('#modal'); modal.classList.add('show'); modal.setAttribute('aria-hidden', 'false'); $('#pcx').focus(); return
+      }
+      if (t.id === 'sb') { const v = $('#se').value.trim(); $('#sm').textContent = /^\S+@\S+\.\S+$/.test(v) ? 'Thanks for your interest. Newsletter signups are not saved in this preview.' : 'Please enter a valid email.'; return }
+      if (t.id === 'pcx') return closePaymentPreview();
+    });
+    document.addEventListener('input', e => {
+      if (e.target.closest && e.target.closest('#mz')) {
+        rememberMeas();
+        const label = e.target.closest('[data-k]');
+        if (label && label.classList.contains('bad')) validateMeasurementInput(e.target);
+        refreshCfgUi();
+      }
+    });
+    document.addEventListener('blur', e => {
+      if (e.target.matches && e.target.matches('#mz input')) { validateMeasurementInput(e.target); refreshCfgUi(); }
+    }, true);
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        if ($('#menu').classList.contains('open')) { closeMenu(); $('#hm').focus(); return }
+        if ($('#bag').classList.contains('open')) {
+          $('#bag').classList.remove('open');
+          const bb = $('#bag-back'); if (bb) bb.classList.remove('open');
+        }
+        if ($('#modal').classList.contains('show')) { closePaymentPreview(); return }
+      }
+      if (e.key === 'Tab' && $('#modal').classList.contains('show')) {
+        e.preventDefault(); $('#pcx').focus();
+      }
+    });
+    function closePaymentPreview(restoreFocus = true) {
+      const modal = $('#modal');
+      if (!modal || !modal.classList.contains('show')) return;
+      modal.classList.remove('show'); modal.setAttribute('aria-hidden', 'true');
+      const trigger = document.querySelector('[data-pay]');
+      if (restoreFocus && trigger) trigger.focus();
+    }
+    function initScrollReveal() {
+      document.querySelectorAll('.grid').forEach(grid => {
+        const columns = Math.max(1, getComputedStyle(grid).gridTemplateColumns.split(/\s+/).filter(Boolean).length);
+        grid.querySelectorAll('.card').forEach((card, index) => {
+          card.classList.add('reveal');
+          card.style.setProperty('--d', `${(index % columns) * 90}ms`);
+        });
+      });
+      if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
+        document.querySelectorAll('.reveal').forEach(el => el.classList.add('in-view'));
+        return;
+      }
+      const obs = new IntersectionObserver((entries, o) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('in-view');
+            o.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+      document.querySelectorAll('.reveal:not(.in-view)').forEach(el => obs.observe(el));
+    }
+    function clearRouteTextEntrance(app) {
+      if (routeEntranceTimer) clearTimeout(routeEntranceTimer);
+      routeEntranceTimer = 0;
+      app.querySelectorAll('.route-entry-text').forEach(el => {
+        el.classList.remove('route-entry-text');
+        el.style.removeProperty('--route-entry-delay');
+      });
+    }
+    function animateRouteText(app) {
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const selector = '.page h1, .page h2, .page h3, .page p, .page label, .page .btn, .page .crumb, .page .info-eyebrow, .page .info-intro, .page .subh, .page .tagline, .page .collection-count, .page .notice, .page .panel-title, .page .panel-copy, .page .cfg-note, .page .steps button, .page .chip';
+      const targets = [...app.querySelectorAll(selector)].filter(el => !el.closest('.reveal'));
+      targets.forEach((el, index) => {
+        el.style.setProperty('--route-entry-delay', `${Math.min(index * 65, 390)}ms`);
+        el.classList.add('route-entry-text');
+      });
+      routeEntranceTimer = setTimeout(() => {
+        targets.forEach(el => {
+          el.classList.remove('route-entry-text');
+          el.style.removeProperty('--route-entry-delay');
+        });
+        routeEntranceTimer = 0;
+      }, 1250);
+    }
+    function resetRouteScroll() {
+      const root = document.documentElement;
+      const previous = root.style.scrollBehavior;
+      root.style.scrollBehavior = 'auto';
+      window.scrollTo(0, 0);
+      root.style.scrollBehavior = previous;
+    }
+    function route() {
+      const h = location.hash || '#/', a = $('#app'), firstRoute = !hasRouted;
+      if (!firstRoute) document.body.classList.remove('is-intro');
+      const activeHref = /^(#\/customize|#\/design|#\/fabric|#\/fabrics)/.test(h) ? '#/collection' : h;
+      document.querySelectorAll('.menu-panel nav a').forEach(link => {
+        if (link.getAttribute('href') === activeHref) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
+      });
+      closePaymentPreview(false);
+      closeMenu();
+      let m, view = null, keepBag = $('#bag').classList.contains('open');
+      $('#bag').classList.remove('open');
+      const bb = $('#bag-back'); if (bb) bb.classList.remove('open');
+      if (m = h.match(/^#\/design\/([\w-]+)\/(\d+)/)) view = pdp(m[2], m[1]);
+      else if (m = h.match(/^#\/(?:customize|design)\/(\d+)/)) view = pdp(m[1]);
+      else if (m = h.match(/^#\/fabric\/([\w-]+)/)) view = fabricPage(m[1]);
+      else if (h === '#/collection' || h === '#/fabrics') view = collectionPage();
+      else if (h === '#/wishlist') view = wishlistPage();
+      else if (h === '#/sale') view = salePage();
+      else if (h === '#/checkout') view = cart.length ? checkout() : emptyCheckout();
+      else if (h === '#/page/about') view = aboutPage();
+      else if (h === '#/page/contact') view = contactPage();
+      else if (h === '#/page/shipping') view = shippingPage();
+      else if (h === '#/page/returns') view = returnsPage();
+      else if (h === '#/page/measure') view = measurementPage();
+      else if (h === '#/page/account') view = accountPage();
+      else if (m = h.match(/^#\/page\/(\w+)/)) view = notFound();
+      else if (h === '#/' || h === '#') view = home();
+      else view = notFound();
+      clearRouteTextEntrance(a);
+      resetRouteScroll();
+      a.innerHTML = view;
+      paintWishlist();
+      bindHomeVideo();
+      bindRail();
+      bindShowcase();
+      initScrollReveal();
+      if (!(firstRoute && (h === '#/' || h === '#'))) animateRouteText(a);
+      hasRouted = true;
+      if (keepBag) {/* closed on navigate, intentional */ }
+    }
+    const header = $('header');
+    const updateHeader = () => header.classList.toggle('scrolled', scrollY > 8);
+    addEventListener('scroll', updateHeader, { passive: true }); updateHeader();
+    document.body.classList.add('is-intro');
+    setTimeout(() => document.body.classList.remove('is-intro'), 1700);
+    document.querySelectorAll('#cnt, .bag-count').forEach(el => {
+      let previous = el.textContent;
+      new MutationObserver(() => {
+        if (el.textContent === previous) return;
+        previous = el.textContent;
+        if (document.body.classList.contains('is-intro')) return;
+        el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump');
+      }).observe(el, { childList: true, characterData: true, subtree: true });
+    });
+    addEventListener('hashchange', route); paint(); paintWishlist(); route();
+  </script>
+</body>
+
+</html>
